@@ -31,7 +31,6 @@ private slots:
 private:
     Ui::JoinGame *ui;
     QTcpSocket *socket;
-    QTcpSocket *socket2;
     QTcpServer *server;
     Network2Player* game2;
 };

@@ -27,14 +27,10 @@ void HostGame::setHostIP(QString address){ hostIP = address; }
 void HostGame::on_pushButton_clicked()
 {
     if(p2connect){
-        hostIP = ui->HostIP->text();
-       qDebug() << "Host IP: " << hostIP;
 
-
-       QByteArray sendData;
-           sendData.append("test");
-          // socket = new QTcpSocket(this);
-           socket->connectToHost(hostIP, 5200);
+        QByteArray sendData;
+           sendData.append("started");
+           socket->connectToHost("192.168.1.8", 5300);
            socket->waitForConnected(1000);
            qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)

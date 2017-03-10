@@ -26,7 +26,7 @@ void JoinGame::setHostIP(QString address){ hostIP = address; }
 void JoinGame::closeEvent(QCloseEvent *e)
 {
     socket->disconnectFromHost();
-    socket2->disconnectFromHost();
+    socket->disconnectFromHost();
     e->accept();
 }
 
@@ -76,7 +76,7 @@ void JoinGame::readyRead()
 
     qDebug()<<"readyRead";
     QString data;
-        data = socket2->readAll();
+        data = socket->readAll();
         qDebug() << "Start Game";
 
    qDebug() << "Host IP: " << hostIP;
