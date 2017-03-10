@@ -10,8 +10,8 @@ JoinGame::JoinGame(QWidget *parent) :
     game2=NULL;
 
     server = new QTcpServer(this);
-    server->listen(QHostAddress::Any, 5200);
-    socket2 = new QTcpSocket(this);
+    server->listen(QHostAddress::Any, 5300);
+    socket = new QTcpSocket(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 }
 
@@ -39,8 +39,8 @@ void JoinGame::on_pushButton_clicked()
 
     QByteArray sendData;
         sendData.append(nickname);
-        socket = new QTcpSocket(this);
-        socket->connectToHost(hostIP, 5300);
+        //socket = new QTcpSocket(this);
+        socket->connectToHost("192.168.1.8", 5300);
         socket->waitForConnected(1000);
         qDebug() << socket->state();
         if(socket->state() == QAbstractSocket::ConnectedState)
@@ -60,9 +60,8 @@ void JoinGame::newConnection()
 {
     while (server->hasPendingConnections()){
         qDebug()<<"Has pending connections";
-        socket2 = server->nextPendingConnection();
-        connect(socket2, SIGNAL(readyRead()),this, SLOT(readyRead()));
-        connect(socket2, SIGNAL(disconnected()),this, SLOT(Disconnected()));
+        connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
+        connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
     }
 }
 
