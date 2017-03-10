@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuNew_Game">
+     <property name="title">
+      <string>New Game</string>
+     </property>
+     <addaction name="actionEasy"/>
+     <addaction name="actionMedium"/>
+     <addaction name="actionHard"/>
+    </widget>
+    <addaction name="menuNew_Game"/>
+    <addaction name="actionHigh_Score"/>
+    <addaction name="actionQuit"/>
+    <addaction name="action2_Player"/>
+    <addaction name="action2_Player_Host"/>
+    <addaction name="action2_Player_Join"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionControls"/>
+    <addaction name="actionContact_Us"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionHigh_Score">
+   <property name="text">
+    <string>High Score</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionContact_Us">
+   <property name="text">
+    <string>Contact Us</string>
+   </property>
+  </action>
+  <action name="actionEasy">
+   <property name="text">
+    <string>Easy</string>
+   </property>
+  </action>
+  <action name="actionMedium">
+   <property name="text">
+    <string>Medium</string>
+   </property>
+  </action>
+  <action name="actionHard">
+   <property name="text">
+    <string>Hard</string>
+   </property>
+  </action>
+  <action name="actionControls">
+   <property name="text">
+    <string>Controls</string>
+   </property>
+  </action>
+  <action name="actionContact_Us_2">
+   <property name="text">
+    <string>Contact Us</string>
+   </property>
+  </action>
+  <action name="action2_Player">
+   <property name="text">
+    <string>2 Player</string>
+   </property>
+  </action>
+  <action name="action2_Player_Host">
+   <property name="text">
+    <string>2 Player Host</string>
+   </property>
+  </action>
+  <action name="action2_Player_Join">
+   <property name="text">
+    <string>2 Player Join</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
