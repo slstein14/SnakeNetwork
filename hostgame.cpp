@@ -30,8 +30,8 @@ void HostGame::on_pushButton_clicked()
 
         QByteArray sendData;
            sendData.append("started");
-           socket->connectToHost("192.168.1.8", 5300);
-           socket->waitForConnected(1000);
+           //socket->connectToHost("192.168.1.8", 5300);
+           //socket->waitForConnected(1000);
            qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)
            {

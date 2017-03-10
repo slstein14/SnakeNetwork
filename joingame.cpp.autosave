@@ -52,10 +52,10 @@ void JoinGame::on_pushButton_clicked()
         {
             qDebug() << socket->errorString();
         }
-            qDebug()<<"Has pending connections";
+            //qDebug()<<"Has pending connections";
             connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
             connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
-            qDebug()<<"Has wra pending connections";
+            //qDebug()<<"Has wra pending connections";
 
 }
 
