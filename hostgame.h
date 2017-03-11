@@ -14,6 +14,7 @@
 #include <vector>
 #include <QGenericMatrix>
 #include <vector>
+#include <time.h>
 using namespace std;
 
 namespace Ui {
