@@ -101,40 +101,34 @@ void JoinGame::readyRead()
             qDebug()<<"Recieved UPDATE";
             if(!game2->isPaused()){
                 QStringList pieces = data.split( ";" );
-                int onPart=0;
+                int onPart=1;
+                //qDebug()<<data;
                 game2->resetObjects();
                 for(int i=0;i<pieces.length();i++){
                     if(pieces.value(i)=="SNAKE1"){
                         onPart=1;
+                        //qDebug()<<"Part1";
                     }
                     else if(pieces.value(i)=="SNAKE2"){
                         onPart=2;
+                       // qDebug()<<"Part2";
                     }
                     else if(pieces.value(i)=="APPLE"){
                         onPart=3;
+                       // qDebug()<<"Part3";
                     }
                     else{
-                        game2->setPart(onPart,pieces.value(i).toInt(),pieces.value(i+1).toInt());
+                        if((0!=pieces.value(i).toInt())&&(0!=pieces.value(i+1).toInt())){
+                            game2->setPart(onPart,pieces.value(i).toInt(),pieces.value(i+1).toInt());
+
+                         //   qDebug()<<pieces.value(i).toInt()<<" "<<pieces.value(i+1).toInt();
+                        }
                         i++;
                     }
                 }
-//                //matrix=details
-//                //qDebug()<<data;
-//                int k=0;
-//                for(int i=0;i<48;i++){
-//                    for(int j=0;j<64;j++){
-//                        k++;
-//                        QStringList pieces = data.split( ";" );
-//                        QString neededWord = pieces.value(k);
-//                        //qDebug()<<pieces.value(k);
-//                        matrix[i][j]=neededWord.toInt();
-//                        //qDebug()<<"Matrix "<<i<<" "<<j<<" is "<<matrix[i][j];
-//                    }
-//                }
-                //game2->setMatrix(matrix);
                 qDebug()<<"Send UPDATE";
-                int dir1=game2->getDirection1();
-                int dir2=game2->getDirection2();
+                QString dir1=QString::number(game2->getDirection1());
+                QString dir2=QString::number(game2->getDirection2());
                 QByteArray updateData;
                 updateData.append("UPDATE;");
                 updateData.append(dir1);
@@ -150,6 +144,7 @@ void JoinGame::readyRead()
                 {
                     qDebug() << socket->errorString();
                 }
+                //game2->update();
             }
             else{
                 qDebug()<<"Send PAUSE";

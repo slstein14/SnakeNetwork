@@ -27,6 +27,11 @@ Network2Player::Network2Player(QWidget *parent) :
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);
 
+    timer = new QTimer();
+    timer->setInterval(100);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateField()));
+    timer->start();
+
     //Initialize Pause Menu
     msg = new QMessageBox();
     pbox = new QMessageBox();
@@ -37,7 +42,7 @@ Network2Player::Network2Player(QWidget *parent) :
 
     //initialize image files
     snakeImage1 = new QPixmap("Images/snakeSegment.png");
-    snakeImage2 = new QPixmap("Images/redsnake.png");
+    snakeImage2 = new QPixmap("Images/RedSnake.png");
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 
@@ -76,7 +81,6 @@ void Network2Player::paintEvent(QPaintEvent *e)
     apple->drawObject(painter);//Renders the Apple object
 int snake1=0;
 int snake2=0;
-int wallcount=0;
     for(int i=0;i<segments1.size();i++){//Renders each segment of the snake 1
         (*(segments1.at(i))).drawObject(painter);
         snake1++;
@@ -88,9 +92,8 @@ int wallcount=0;
 
     for(int i=0;i<walls.size();i++){//Renders each wall segment
         (*(walls.at(i))).drawObject(painter);
-        wallcount++;
     }
-    qDebug()<<"Snake1 "<<snake1<<" Snake2 "<<snake2<<" Wall "<<wallcount;
+    qDebug()<<"Snake1 "<<snake1<<" Snake2 "<<snake2;
 }
 
 void Network2Player::keyPressEvent(QKeyEvent *evt)
@@ -251,46 +254,6 @@ void Network2Player::resetDirectionKeys()
     this->newDirection2=false;
 }
 
-//void Network2Player::setMatrix(int newMatrix[48][64])
-//{
-//    qDebug()<<"SetMatrix";
-//    segments1.clear();
-//    segments2.clear();
-//    walls.clear();
-//    for(int i=0;i<48;i++){
-//        for(int j=0;j<64;j++){
-//            //matrix[i][j]=newMatrix[i][j];
-//            if(newMatrix[i][j]==3){
-//                //initialize map borders and matrix
-//                wall->setXCoord(j);
-//                wall->setYCoord(i);
-//                walls.push_back(wall);
-//            }
-//            else if(newMatrix[i][j]==1){
-//                player1->setXCoord(i);
-//                player1->setYCoord(j);
-//                segments1.push_back(player1);
-//              //  qDebug()<<"Player 1 X "<<i<<" Y "<<j;
-//            }
-//            else if(newMatrix[i][j]==4){
-//                player2->setXCoord(i);
-//                player2->setYCoord(j);
-//                segments2.push_back(player2);
-//               // qDebug()<<"Player 2 X "<<i<<" Y "<<j;
-//            }
-//            else if(newMatrix[i][j]==2){
-//                apple->setXCoord(i);
-//                apple->setYCoord(j);
-//            }
-//            else if(newMatrix[i][j]==0){
-//                //nothing to see here
-//            }
-//            else{
-//                qDebug()<<"Matrix value out of range";
-//            }
-//        }
-//    }
-//}
 
 bool Network2Player::isPaused()
 {
@@ -300,13 +263,17 @@ bool Network2Player::isPaused()
 void Network2Player::setPart(int i, int x, int y)
 {
     if(i==1){
+        RenderObject *player1=new RenderObject(this);
         player1->setXCoord(x);
         player1->setYCoord(y);
+        player1->setImage(snakeImage1);
         segments1.push_back(player1);
     }
     else if(i==2){
+        RenderObject *player2=new RenderObject(this);
         player2->setXCoord(x);
         player2->setYCoord(y);
+        player2->setImage(snakeImage2);
         segments2.push_back(player2);
     }
     else if(i==3){
@@ -319,4 +286,9 @@ void Network2Player::resetObjects()
 {
     segments1.clear();
     segments2.clear();
+}
+
+void Network2Player::updateField()
+{
+    this->update();
 }

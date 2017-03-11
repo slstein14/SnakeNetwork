@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <vector>
+#include <QTimer>
 #include "highscores.h"
 using namespace std;
 
@@ -20,6 +21,7 @@ private:
     RenderObject *player2;
     RenderObject* wall;
     RenderObject* apple;
+    QTimer *timer;
     HighScores* scoreSet;
     vector<RenderObject*>walls;
     vector<RenderObject*>segments1;
@@ -49,6 +51,9 @@ public:
     bool isPaused();
     void setPart(int i, int x, int y);
     void resetObjects();
+
+public slots:
+    void updateField();
 };
 
 #endif // NETWORK2PLAYER_H
