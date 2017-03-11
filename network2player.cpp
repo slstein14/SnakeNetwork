@@ -65,7 +65,7 @@ Network2Player::Network2Player(QWidget *parent) :
 
     //initialize snake
     player1 = new RenderObject(this);
-    segments1.push_back(player1);
+    player1->setImage(snakeImage1);
 
     player2 = new RenderObject(this);
     player2->setImage(snakeImage2);
@@ -252,6 +252,7 @@ void Network2Player::resetDirectionKeys()
 
 void Network2Player::setMatrix(int newMatrix[48][64])
 {
+    qDebug()<<"SetMatrix";
     segments1.clear();
     segments2.clear();
     for(int i=0;i<48;i++){
@@ -264,11 +265,13 @@ void Network2Player::setMatrix(int newMatrix[48][64])
                 player1->setXCoord(i);
                 player1->setYCoord(j);
                 segments1.push_back(player1);
+                qDebug()<<"Player 1 X "<<i<<" Y "<<j;
             }
             else if(matrix[i][j]==4){
                 player2->setXCoord(i);
                 player2->setYCoord(j);
                 segments2.push_back(player2);
+                qDebug()<<"Player 2 X "<<i<<" Y "<<j;
             }
             else if(matrix[i][j]==2){
                 apple->setXCoord(i);

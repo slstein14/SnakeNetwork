@@ -117,6 +117,7 @@ void HostGame::Disconnected()
 {
     p2connect=false;
     ui->Player2_Name->setText("No Player 2 Connected");
+    timer->stop();
     qDebug() << "Disconnected";
 }
 
@@ -184,6 +185,7 @@ void HostGame::updateField()
            qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)
            {
+               qDebug()<<sendData;
                socket->write(sendData); //write the data itself
                socket->waitForBytesWritten();
            }
