@@ -174,26 +174,27 @@ void HostGame::updateField()
         //Redraws the entire screen at once
         //this->update();
 
-        QByteArray sendData;
-           sendData.append("UPDATE;");
+        QByteArray sendUpdateData;
+           sendUpdateData.append("UPDATE;");
            for(int i=0;i<48;i++){
                for(int j=0;j<64;j++){
-                   sendData.append(matrix[i][j]);
-                   sendData.append(";");
+                   QString temp=QString::number(matrix[i][j]);
+
+                   sendUpdateData.append(temp);
+                   sendUpdateData.append(";");
                }
            }
-           qDebug() << socket->state();
+           //qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)
            {
-               qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
-               socket->write(sendData); //write the data itself
+               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
+               socket->write(sendUpdateData); //write the data itself
                socket->waitForBytesWritten();
            }
            else
            {
-               qDebug() << socket->errorString();
+               qDebug() <<"update send fail"<< socket->errorString();
            }
-           timer->start();
     }
 }
 
