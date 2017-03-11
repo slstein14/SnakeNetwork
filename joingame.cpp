@@ -14,11 +14,6 @@ JoinGame::JoinGame(QWidget *parent) :
     socket = new QTcpSocket(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
-    for(int i=0;i<48;i++){
-        for(int j=0;j<64;j++){
-           matrix[i][j]=0;
-        }
-    }
 }
 
 JoinGame::~JoinGame()
@@ -105,20 +100,38 @@ void JoinGame::readyRead()
         if(command=="UPDATE"){
             qDebug()<<"Recieved UPDATE";
             if(!game2->isPaused()){
-                //matrix=details
-                //qDebug()<<data;
-                int k=0;
-                for(int i=0;i<48;i++){
-                    for(int j=0;j<64;j++){
-                        k++;
-                        QStringList pieces = data.split( ";" );
-                        QString neededWord = pieces.value(k);
-                        //qDebug()<<pieces.value(k);
-                        matrix[i][j]=neededWord.toInt();
-                        //qDebug()<<"Matrix "<<i<<" "<<j<<" is "<<matrix[i][j];
+                QStringList pieces = data.split( ";" );
+                int onPart=0;
+                game2->resetObjects();
+                for(int i=0;i<pieces.length();i++){
+                    if(pieces.value(i)=="SNAKE1"){
+                        onPart=1;
+                    }
+                    else if(pieces.value(i)=="SNAKE2"){
+                        onPart=2;
+                    }
+                    else if(pieces.value(i)=="APPLE"){
+                        onPart=3;
+                    }
+                    else{
+                        game2->setPart(onPart,pieces.value(i).toInt(),pieces.value(i+1).toInt());
+                        i++;
                     }
                 }
-                game2->setMatrix(matrix);
+//                //matrix=details
+//                //qDebug()<<data;
+//                int k=0;
+//                for(int i=0;i<48;i++){
+//                    for(int j=0;j<64;j++){
+//                        k++;
+//                        QStringList pieces = data.split( ";" );
+//                        QString neededWord = pieces.value(k);
+//                        //qDebug()<<pieces.value(k);
+//                        matrix[i][j]=neededWord.toInt();
+//                        //qDebug()<<"Matrix "<<i<<" "<<j<<" is "<<matrix[i][j];
+//                    }
+//                }
+                //game2->setMatrix(matrix);
                 qDebug()<<"Send UPDATE";
                 int dir1=game2->getDirection1();
                 int dir2=game2->getDirection2();

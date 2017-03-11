@@ -46,8 +46,9 @@ public:
     int getDirection1();
     int getDirection2();
     void resetDirectionKeys();
-    void setMatrix(int newMatrix[48][64]);
     bool isPaused();
+    void setPart(int i, int x, int y);
+    void resetObjects();
 };
 
 #endif // NETWORK2PLAYER_H

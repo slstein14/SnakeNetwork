@@ -175,15 +175,34 @@ void HostGame::updateField()
         //this->update();
 
         QByteArray sendUpdateData;
-           sendUpdateData.append("UPDATE;");
-           for(int i=0;i<48;i++){
-               for(int j=0;j<64;j++){
-                   QString temp=QString::number(matrix[i][j]);
+           sendUpdateData.append("UPDATE;SNAKE1;");
+           for(int i=0;i<segments1.size();i++){
+              QString temp=QString::number((*(segments1.at(i))).getXCoord());
+              sendUpdateData.append(temp);
+              sendUpdateData.append(";");
 
-                   sendUpdateData.append(temp);
-                   sendUpdateData.append(";");
-               }
+              temp=QString::number((*(segments1.at(i))).getYCoord());
+              sendUpdateData.append(temp);
+              sendUpdateData.append(";");
            }
+           sendUpdateData.append("SNAKE2;");
+           for(int i=0;i<segments2.size();i++){
+              QString temp=QString::number((*(segments2.at(i))).getXCoord());
+              sendUpdateData.append(temp);
+              sendUpdateData.append(";");
+
+              temp=QString::number((*(segments2.at(i))).getYCoord());
+              sendUpdateData.append(temp);
+              sendUpdateData.append(";");
+           }
+
+           sendUpdateData.append("APPLE;");
+           QString temp=QString::number(apple->getXCoord());
+           sendUpdateData.append(temp);
+           sendUpdateData.append(";");
+           temp=QString::number(apple->getYCoord());
+           sendUpdateData.append(temp);
+           sendUpdateData.append(";");
            //qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)
            {

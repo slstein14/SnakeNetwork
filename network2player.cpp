@@ -46,10 +46,18 @@ Network2Player::Network2Player(QWidget *parent) :
     direction2=1;
     newDirection2=false;
 
+    for(int i=0;i<48;i++){
+        for(int j=0;j<64;j++){
+            if(0==j||0==i||63==j||47==i){
+                wall = new RenderObject(this);
+                wall->setXCoord(j);
+                wall->setYCoord(i);
+                wall->setImage(wallImage);
+                walls.push_back(wall);
+            }
+        }
+    }
 
-
-    wall = new RenderObject(this);
-    wall->setImage(wallImage);
     //initialize snake
     player1 = new RenderObject(this);
     player1->setImage(snakeImage1);
@@ -66,17 +74,23 @@ void Network2Player::paintEvent(QPaintEvent *e)
 {//Paint Event Draws The Images On The Screen
     QPainter painter(this);//Painter object indicates what window to render in
     apple->drawObject(painter);//Renders the Apple object
-
+int snake1=0;
+int snake2=0;
+int wallcount=0;
     for(int i=0;i<segments1.size();i++){//Renders each segment of the snake 1
         (*(segments1.at(i))).drawObject(painter);
+        snake1++;
     }
     for(int i=0;i<segments2.size();i++){//Renders each segment of the snake 2
         (*(segments2.at(i))).drawObject(painter);
+        snake2++;
     }
 
     for(int i=0;i<walls.size();i++){//Renders each wall segment
         (*(walls.at(i))).drawObject(painter);
+        wallcount++;
     }
+    qDebug()<<"Snake1 "<<snake1<<" Snake2 "<<snake2<<" Wall "<<wallcount;
 }
 
 void Network2Player::keyPressEvent(QKeyEvent *evt)
@@ -237,48 +251,72 @@ void Network2Player::resetDirectionKeys()
     this->newDirection2=false;
 }
 
-void Network2Player::setMatrix(int newMatrix[48][64])
-{
-    qDebug()<<"SetMatrix";
-    segments1.clear();
-    segments2.clear();
-    walls.clear();
-    for(int i=0;i<48;i++){
-        for(int j=0;j<64;j++){
-            //matrix[i][j]=newMatrix[i][j];
-            if(newMatrix[i][j]==3){
-                //initialize map borders and matrix
-                wall->setXCoord(j);
-                wall->setYCoord(i);
-                walls.push_back(wall);
-            }
-            else if(newMatrix[i][j]==1){
-                player1->setXCoord(i);
-                player1->setYCoord(j);
-                segments1.push_back(player1);
-              //  qDebug()<<"Player 1 X "<<i<<" Y "<<j;
-            }
-            else if(newMatrix[i][j]==4){
-                player2->setXCoord(i);
-                player2->setYCoord(j);
-                segments2.push_back(player2);
-               // qDebug()<<"Player 2 X "<<i<<" Y "<<j;
-            }
-            else if(newMatrix[i][j]==2){
-                apple->setXCoord(i);
-                apple->setYCoord(j);
-            }
-            else if(newMatrix[i][j]==0){
-                //nothing to see here
-            }
-            else{
-                qDebug()<<"Matrix value out of range";
-            }
-        }
-    }
-}
+//void Network2Player::setMatrix(int newMatrix[48][64])
+//{
+//    qDebug()<<"SetMatrix";
+//    segments1.clear();
+//    segments2.clear();
+//    walls.clear();
+//    for(int i=0;i<48;i++){
+//        for(int j=0;j<64;j++){
+//            //matrix[i][j]=newMatrix[i][j];
+//            if(newMatrix[i][j]==3){
+//                //initialize map borders and matrix
+//                wall->setXCoord(j);
+//                wall->setYCoord(i);
+//                walls.push_back(wall);
+//            }
+//            else if(newMatrix[i][j]==1){
+//                player1->setXCoord(i);
+//                player1->setYCoord(j);
+//                segments1.push_back(player1);
+//              //  qDebug()<<"Player 1 X "<<i<<" Y "<<j;
+//            }
+//            else if(newMatrix[i][j]==4){
+//                player2->setXCoord(i);
+//                player2->setYCoord(j);
+//                segments2.push_back(player2);
+//               // qDebug()<<"Player 2 X "<<i<<" Y "<<j;
+//            }
+//            else if(newMatrix[i][j]==2){
+//                apple->setXCoord(i);
+//                apple->setYCoord(j);
+//            }
+//            else if(newMatrix[i][j]==0){
+//                //nothing to see here
+//            }
+//            else{
+//                qDebug()<<"Matrix value out of range";
+//            }
+//        }
+//    }
+//}
 
 bool Network2Player::isPaused()
 {
     return this->paused;
+}
+
+void Network2Player::setPart(int i, int x, int y)
+{
+    if(i==1){
+        player1->setXCoord(x);
+        player1->setYCoord(y);
+        segments1.push_back(player1);
+    }
+    else if(i==2){
+        player2->setXCoord(x);
+        player2->setYCoord(y);
+        segments2.push_back(player2);
+    }
+    else if(i==3){
+        apple->setXCoord(x);
+        apple->setYCoord(y);
+    }
+}
+
+void Network2Player::resetObjects()
+{
+    segments1.clear();
+    segments2.clear();
 }
