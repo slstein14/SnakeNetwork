@@ -138,6 +138,7 @@ void HostGame::readyRead()
             QStringList dataPieces=data.split(";");
             QString dir1=dataPieces.value(1);
             QString dir2=dataPieces.value(2);
+            //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
             direction1=dir1.toInt();
             direction2=dir2.toInt();
         }
@@ -267,7 +268,8 @@ void HostGame::moveSnake()
     //Checks if the player has collided with a wall
     if((3==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()])||(1==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()])){
         //Stops all objects from moving in the background
-        qDebug()<<"P1 Collision"<<matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()];
+        qDebug()<<"P1 Collision Object "<<matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()]<<" At X "<<(*(segments1.at(0))).getXCoord()<<" Y "<<(*(segments1.at(0))).getYCoord();
+        qDebug()<<"Direction "<<direction1;
         player1lost=true;
     }
 
@@ -321,7 +323,7 @@ void HostGame::moveSnake()
     //Checks if the player has collided with a wall
     if((3==matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()])||(1==matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()])){
         player2lost=true;
-        qDebug()<<"P2 Collision"<<matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()];
+        qDebug()<<"P2 Collision Object "<<matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()]<<" At X "<<(*(segments2.at(0))).getXCoord()<<" Y "<<(*(segments2.at(0))).getYCoord();
     }
 
     //Sets the new front segment location to indicate a snake is there
