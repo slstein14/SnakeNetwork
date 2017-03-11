@@ -76,6 +76,7 @@ private:
     Ui::HostGame *ui;
     void moveSnake();
     void moveApple();
+    void resetVars();
 
 };
 

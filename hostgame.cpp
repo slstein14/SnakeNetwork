@@ -118,6 +118,7 @@ void HostGame::Disconnected()
     p2connect=false;
     ui->Player2_Name->setText("No Player 2 Connected");
     timer->stop();
+    this->resetVars();
     qDebug() << "Disconnected";
 }
 
@@ -402,6 +403,49 @@ void HostGame::moveApple()
     //Indicates a new apple has appeared
     appleEatenBy2=false;
     appleEatenBy1=false;
+
+}
+
+void HostGame::resetVars()
+{
+    for(int i=0;i<48;i++){
+        for(int j=0;j<64;j++){
+            if(0==j||0==i||63==j||47==i){
+                matrix[i][j]=3;
+            }
+            else matrix[i][j]=0;
+        }
+    }
+
+    //initialize snake
+    segments1.clear();
+    segments2.clear();
+    for(int i=4;i>1;i--){
+        player1 = new RenderObject(this);
+        player1->setXCoord(i);
+        player1->setYCoord(1);
+        player1->setImage(snakeImage1);
+        segments1.push_back(player1);
+        matrix[i][1]=1;
+    }
+
+    for(int i=60;i<63;i++){
+        player2 = new RenderObject(this);
+        player2->setXCoord(i);
+        player2->setYCoord(46);
+        player2->setImage(snakeImage2);
+        segments2.push_back(player2);
+        matrix[i][46]=4;
+    }
+
+    //initialize apple randomly
+    this->moveApple();
+
+    score1=0;
+    score2=0;
+
+    player1lost=false;
+    player2lost=false;
 
 }
 
