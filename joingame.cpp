@@ -106,7 +106,7 @@ void JoinGame::readyRead()
             qDebug()<<"Recieved UPDATE";
             if(!game2->isPaused()){
                 //matrix=details
-                qDebug()<<data;
+                //qDebug()<<data;
                 int k=0;
                 for(int i=0;i<48;i++){
                     for(int j=0;j<64;j++){

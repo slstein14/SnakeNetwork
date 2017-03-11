@@ -46,23 +46,10 @@ Network2Player::Network2Player(QWidget *parent) :
     direction2=1;
     newDirection2=false;
 
-    //initialize map borders and matrix
-    //Note that the matrix assumes a 640x480 window
-    //It takes 10 pixel squares and interprets them as one 'unit'
-    for(int i=0;i<48;i++){
-        for(int j=0;j<64;j++){
-            if(0==j||0==i||63==j||47==i){
-                matrix[i][j]=3;
-                wall = new RenderObject(this);
-                wall->setXCoord(j);
-                wall->setYCoord(i);
-                wall->setImage(wallImage);
-                walls.push_back(wall);
-            }
-            else matrix[i][j]=0;
-        }
-    }
 
+
+    wall = new RenderObject(this);
+    wall->setImage(wallImage);
     //initialize snake
     player1 = new RenderObject(this);
     player1->setImage(snakeImage1);
@@ -255,29 +242,33 @@ void Network2Player::setMatrix(int newMatrix[48][64])
     qDebug()<<"SetMatrix";
     segments1.clear();
     segments2.clear();
+    walls.clear();
     for(int i=0;i<48;i++){
         for(int j=0;j<64;j++){
-            matrix[i][j]=newMatrix[i][j];
-            if(matrix[i][j]==3){
-                //its a wall - no need to update
+            //matrix[i][j]=newMatrix[i][j];
+            if(newMatrix[i][j]==3){
+                //initialize map borders and matrix
+                wall->setXCoord(j);
+                wall->setYCoord(i);
+                walls.push_back(wall);
             }
-            else if(matrix[i][j]==1){
+            else if(newMatrix[i][j]==1){
                 player1->setXCoord(i);
                 player1->setYCoord(j);
                 segments1.push_back(player1);
-                qDebug()<<"Player 1 X "<<i<<" Y "<<j;
+              //  qDebug()<<"Player 1 X "<<i<<" Y "<<j;
             }
-            else if(matrix[i][j]==4){
+            else if(newMatrix[i][j]==4){
                 player2->setXCoord(i);
                 player2->setYCoord(j);
                 segments2.push_back(player2);
-                qDebug()<<"Player 2 X "<<i<<" Y "<<j;
+               // qDebug()<<"Player 2 X "<<i<<" Y "<<j;
             }
-            else if(matrix[i][j]==2){
+            else if(newMatrix[i][j]==2){
                 apple->setXCoord(i);
                 apple->setYCoord(j);
             }
-            else if(matrix[i][j]==0){
+            else if(newMatrix[i][j]==0){
                 //nothing to see here
             }
             else{
