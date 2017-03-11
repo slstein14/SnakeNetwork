@@ -185,7 +185,7 @@ void HostGame::updateField()
            qDebug() << socket->state();
            if(socket->state() == QAbstractSocket::ConnectedState)
            {
-               qDebug()<<sendData;
+               qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
                socket->write(sendData); //write the data itself
                socket->waitForBytesWritten();
            }
