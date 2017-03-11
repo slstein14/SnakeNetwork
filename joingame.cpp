@@ -70,6 +70,7 @@ void JoinGame::newConnection()
 
 void JoinGame::Disconnected()
 {
+    delete game2;
     qDebug() << "Disconnected";
 
 }

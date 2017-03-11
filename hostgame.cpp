@@ -446,7 +446,8 @@ void HostGame::resetVars()
 
     player1lost=false;
     player2lost=false;
-
+    direction1=2;
+    direction2=1;
 }
 
 
