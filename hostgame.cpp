@@ -235,12 +235,12 @@ void HostGame::p2readyRead()
         qDebug() << "Player" << data << "Has Joined";
         QByteArray sendConnected2;
            sendConnected2.append("CONNECTED;");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
+           qDebug() << socketp2->state();
+           if(socketp2->state() == QAbstractSocket::ConnectedState)
            {
                sendConnected2.append("PLAYER2");
-               socketp1->write(sendConnected2); //write the data itself
-               socketp1->waitForBytesWritten();
+               socketp2->write(sendConnected2); //write the data itself
+               socketp2->waitForBytesWritten();
                gameStarted=true;
            }
            else
