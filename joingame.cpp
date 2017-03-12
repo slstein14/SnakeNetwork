@@ -103,6 +103,19 @@ void JoinGame::readyRead()
             else if(data.split(";").last()=="PLAYER2"){
                 game2->setPlayer(2);
             }
+            qDebug()<<"Send READY";
+            QByteArray readyData;
+            readyData.append("READY;");
+            qDebug() << socket->state();
+            if(socket->state() == QAbstractSocket::ConnectedState)
+            {
+                socket->write(readyData); //write the data itself
+                socket->waitForBytesWritten();
+            }
+            else
+            {
+                qDebug() << socket->errorString();
+            }
         }
         else if(command=="UPDATE"){
             qDebug()<<"Recieved UPDATE";

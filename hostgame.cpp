@@ -176,6 +176,8 @@ void HostGame::p1readyRead()
                 direction1=dir1.toInt();
                 newDirection1=true;
             }
+        }
+        else if(data=="READY"){
             p1ready=true;
             if(p2ready&&p1ready){
                 timer->start();
@@ -219,6 +221,8 @@ void HostGame::p2readyRead()
                 direction2=dir2.toInt();
                 newDirection2=true;
             }
+        }
+        else if(data=="READY"){
             p2ready=true;
             if(p2ready&&p1ready){
                 timer->start();
