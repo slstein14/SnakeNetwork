@@ -40,7 +40,7 @@ void JoinGame::on_pushButton_clicked()
     QByteArray sendData;
         sendData.append(nickname);
         //socket = new QTcpSocket(this);
-        socket->connectToHost("192.168.1.8", 5300);
+        socket->connectToHost(hostIP, 5300);
         socket->waitForConnected(1000);
         qDebug() << socket->state();
         if(socket->state() == QAbstractSocket::ConnectedState)

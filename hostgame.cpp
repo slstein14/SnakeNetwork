@@ -7,6 +7,7 @@ HostGame::HostGame(QWidget *parent) :
 {
     ui->setupUi(this);
     p2connect=false;
+    p2connect=false;
     gameStarted=false;
     paused=false;
 
@@ -87,7 +88,7 @@ void HostGame::setHostIP(QString address){ hostIP = address; }
 
 void HostGame::on_pushButton_clicked()
 {
-    if(p2connect){
+    if(p1connect&&p2connect){
         QByteArray sendData;
            sendData.append("STARTED");
            qDebug() << socket->state();
@@ -109,13 +110,29 @@ void HostGame::newConnection()
 {
     while (server->hasPendingConnections()){
         qDebug()<<"Has pending connections";
-        socket = server->nextPendingConnection();
-        connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
-        connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
+        if(!p1connect){
+            socket = server->nextPendingConnection();
+            connect(socket, SIGNAL(readyRead()),this, SLOT(p1readyRead()));
+            connect(socket, SIGNAL(disconnected()),this, SLOT(p1Disconnected()));
+        }
+        else if(!p2connect){
+            socket = server->nextPendingConnection();
+            connect(socket, SIGNAL(readyRead()),this, SLOT(p1readyRead()));
+            connect(socket, SIGNAL(disconnected()),this, SLOT(p2Disconnected()));
+        }
     }
 }
 
-void HostGame::Disconnected()
+void HostGame::p1Disconnected()
+{
+    p1connect=false;
+    ui->Player1_Name->setText("No Player 1 Connected");
+    timer->stop();
+    this->resetVars();
+    qDebug() << "Disconnected";
+}
+
+void HostGame::p2Disconnected()
 {
     p2connect=false;
     ui->Player2_Name->setText("No Player 2 Connected");
@@ -124,7 +141,53 @@ void HostGame::Disconnected()
     qDebug() << "Disconnected";
 }
 
-void HostGame::readyRead()
+void HostGame::p1readyRead()
+{
+    qDebug()<<"readyRead";
+    QString data;
+    data = socket->readAll();
+    if(!p1connect){
+        ui->Player2_Name->setText(data);
+        p1connect=true;
+        qDebug() << "Player" << data << "Has Joined";
+    }
+    else if(gameStarted){
+
+        QString command = data.split(";").first();
+        if(command=="UPDATE"){
+            QStringList dataPieces=data.split(";");
+            QString dir1=dataPieces.value(1);
+            QString dir2=dataPieces.value(2);
+            //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
+            if(newDirection1==false){
+                direction1=dir1.toInt();
+                newDirection1=true;
+            }
+//            if(newDirection2==false){
+//                direction2=dir2.toInt();
+//                newDirection2=true;
+//            }
+        }
+        else if(data=="PAUSE"){
+            paused=true;
+            QByteArray sendData;
+               sendData.append("PAUSED");
+               qDebug() << socket->state();
+               if(socket->state() == QAbstractSocket::ConnectedState)
+               {
+                   socket->write(sendData); //write the data itself
+                   socket->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() << socket->errorString();
+               }
+               timer->stop();
+        }
+    }
+}
+
+void HostGame::p2readyRead()
 {
     qDebug()<<"readyRead";
     QString data;
@@ -142,10 +205,10 @@ void HostGame::readyRead()
             QString dir1=dataPieces.value(1);
             QString dir2=dataPieces.value(2);
             //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
-            if(newDirection1==false){
-                direction1=dir1.toInt();
-                newDirection1=true;
-            }
+//            if(newDirection1==false){
+//                direction1=dir1.toInt();
+//                newDirection1=true;
+//            }
             if(newDirection2==false){
                 direction2=dir2.toInt();
                 newDirection2=true;

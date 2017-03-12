@@ -60,6 +60,7 @@ public:
     QPixmap *wallImage;
     QPixmap *appleImage;
 
+    bool p1connect;
     bool p2connect;
     bool gameStarted;
     bool newDirection1;
@@ -69,8 +70,10 @@ public:
 private slots:
     void on_pushButton_clicked();
     void newConnection();
-    void Disconnected();
-    void readyRead();
+    void p1Disconnected();
+    void p2Disconnected();
+    void p1readyRead();
+    void p2readyRead();
     void updateField();
 
 

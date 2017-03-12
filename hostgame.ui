@@ -57,7 +57,7 @@
     <rect>
      <x>130</x>
      <y>120</y>
-     <width>151</width>
+     <width>181</width>
      <height>111</height>
     </rect>
    </property>
@@ -71,13 +71,26 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
-      <width>131</width>
+      <y>40</y>
+      <width>151</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Player 2 Has Not Joined</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Player1_Name">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Player 1 Has Not Joined</string>
     </property>
    </widget>
   </widget>
