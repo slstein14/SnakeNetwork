@@ -46,8 +46,7 @@ Network2Player::Network2Player(QWidget *parent) :
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 
-    direction1=2;
-    direction2=1;
+    direction=2;
 
     for(int i=0;i<48;i++){
         for(int j=0;j<64;j++){
@@ -106,70 +105,35 @@ void Network2Player::keyPressEvent(QKeyEvent *evt)
         }
         break;
     }
-
-    //if(false==newDirection1){
-        qDebug()<<"Key 1 Event?";
-        switch(evt->key())
-            {//Sets the snake based on the arrow keys, and pauses based on P and Esc
-            case Qt::Key_Right:
-                if(direction1!=1){
-                   // newDirection1=true;
-                    direction1=2;
-                }
-                break;
-            case Qt::Key_Down:
-                if(direction1!=0){
-                    //newDirection1=true;
-                    direction1=3;
-                }
-                break;
-            case Qt::Key_Up:
-                if(direction1!=3){
-                    //newDirection1=true;
-                    direction1=0;
-                }
-                break;
-            case Qt::Key_Left:
-                if(direction1!=2){
-                    //newDirection1=true;
-                    direction1=1;
-                }
-                break;
-            default:
-                break;
-        }
-    //}
-    //if(false==newDirection2){
-        qDebug()<<"Key 2 Event";
-        switch(evt->key())
-            {//Sets the snake based on the arrow keys, and pauses based on P and Esc
-            case Qt::Key_D:
-                if(direction2!=1){
-                   // newDirection2=true;
-                    direction2=2;
-                }
-                break;
-                case Qt::Key_S:
-                if(direction2!=0){
-                    //newDirection2=true;
-                    direction2=3;
-                }
-                break;
-            case Qt::Key_W:
-                if(direction2!=3){
-                    //newDirection2=true;
-                    direction2=0;
-                }
-                break;
-            case Qt::Key_A:
-                if(direction2!=2){
-                    //newDirection2=true;
-                    direction2=1;
-                }
-                break;
-            default:
-                break;
-        //}
+    qDebug()<<"Key 1 Event";
+    switch(evt->key())
+        {//Sets the snake based on the arrow keys, and pauses based on P and Esc
+        case Qt::Key_Right:
+            if(direction!=1){
+               // newDirection1=true;
+                direction=2;
+            }
+            break;
+        case Qt::Key_Down:
+            if(direction!=0){
+                //newDirection1=true;
+                direction=3;
+            }
+            break;
+        case Qt::Key_Up:
+            if(direction!=3){
+                //newDirection1=true;
+                direction=0;
+            }
+            break;
+        case Qt::Key_Left:
+            if(direction!=2){
+                //newDirection1=true;
+                direction=1;
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -236,15 +200,11 @@ void Network2Player::gameOver(int winner)
 
 }
 
-int Network2Player::getDirection1()
+int Network2Player::getDirection()
 {
-    return this->direction1;
+    return this->direction;
 }
 
-int Network2Player::getDirection2()
-{
-    return this->direction2;
-}
 
 bool Network2Player::isPaused()
 {
@@ -277,6 +237,19 @@ void Network2Player::resetObjects()
 {
     segments1.clear();
     segments2.clear();
+}
+
+void Network2Player::setPlayer(int player)
+{
+    if(player==1){
+        direction=2;
+    }
+    else if(player==2){
+        direction=1;
+    }
+    else{
+        qDebug()<<"Player out of range";
+    }
 }
 
 void Network2Player::updateField()

@@ -81,24 +81,30 @@ void JoinGame::readyRead()
     qDebug()<<"readyRead";
     QString data;
         data = socket->readAll();
-    if(data=="STARTED"){
-        qDebug()<<"New Game";
-        if(game2 == NULL)
-            {
-                game2 = new Network2Player();
-            }else{
-                delete game2;
-                game2 = new Network2Player();
-            }
-            game2->show();
-    }
-    else if(data=="PAUSED"){
+    if(data=="PAUSED"){
         qDebug()<<"Recieved PAUSED";
             game2->pauseMenu();
     }
     else{
         QString command = data.split(";").first();
-        if(command=="UPDATE"){
+        if(command=="STARTED"){
+            qDebug()<<"New Game";
+            if(game2 == NULL){
+                game2 = new Network2Player();
+            }
+            else{
+                delete game2;
+                game2 = new Network2Player();
+            }
+            game2->show();
+            if(data.split(";").last()=="PLAYER1"){
+                game2->setPlayer(1);
+            }
+            else if(data.split(";").last()=="PLAYER2"){
+                game2->setPlayer(2);
+            }
+        }
+        else if(command=="UPDATE"){
             qDebug()<<"Recieved UPDATE";
             if(!game2->isPaused()){
                 QStringList pieces = data.split( ";" );
@@ -128,13 +134,10 @@ void JoinGame::readyRead()
                     }
                 }
                 qDebug()<<"Send UPDATE";
-                QString dir1=QString::number(game2->getDirection1());
-                QString dir2=QString::number(game2->getDirection2());
+                QString dir=QString::number(game2->getDirection());
                 QByteArray updateData;
                 updateData.append("UPDATE;");
-                updateData.append(dir1);
-                updateData.append(";");
-                updateData.append(dir2);
+                updateData.append(dir);
                 qDebug() << socket->state();
                 if(socket->state() == QAbstractSocket::ConnectedState)
                 {

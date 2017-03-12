@@ -91,10 +91,11 @@ void HostGame::on_pushButton_clicked()
 {
     if(p1connect&&p2connect){
         QByteArray sendData;
-           sendData.append("STARTED");
+           sendData.append("STARTED;");
            qDebug() << socketp1->state();
            if(socketp1->state() == QAbstractSocket::ConnectedState)
            {
+               sendData.append("PLAYER1");
                socketp1->write(sendData); //write the data itself
                socketp1->waitForBytesWritten();
                gameStarted=true;
@@ -106,6 +107,7 @@ void HostGame::on_pushButton_clicked()
            qDebug() << socketp2->state();
            if(socketp2->state() == QAbstractSocket::ConnectedState)
            {
+               sendData.append("PLAYER2");
                socketp2->write(sendData); //write the data itself
                socketp2->waitForBytesWritten();
                gameStarted=true;
@@ -169,16 +171,10 @@ void HostGame::p1readyRead()
         if(command=="UPDATE"){
             QStringList dataPieces=data.split(";");
             QString dir1=dataPieces.value(1);
-            QString dir2=dataPieces.value(2);
-            //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
             if(newDirection1==false){
                 direction1=dir1.toInt();
                 newDirection1=true;
             }
-//            if(newDirection2==false){
-//                direction2=dir2.toInt();
-//                newDirection2=true;
-//            }
         }
         else if(data=="PAUSE"){
             paused=true;
@@ -210,17 +206,10 @@ void HostGame::p2readyRead()
         qDebug() << "Player" << data << "Has Joined";
     }
     else if(gameStarted){
-
         QString command = data.split(";").first();
         if(command=="UPDATE"){
             QStringList dataPieces=data.split(";");
-            QString dir1=dataPieces.value(1);
-            QString dir2=dataPieces.value(2);
-            //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
-//            if(newDirection1==false){
-//                direction1=dir1.toInt();
-//                newDirection1=true;
-//            }
+            QString dir2=dataPieces.value(1);
             if(newDirection2==false){
                 direction2=dir2.toInt();
                 newDirection2=true;

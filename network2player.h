@@ -28,8 +28,7 @@ private:
     vector<RenderObject*>segments2;
     int matrix[48][64];
     bool paused;
-    int direction1;
-    int direction2;
+    int direction;
     QMessageBox *msg;
     QMessageBox *pbox;
     QPixmap *snakeImage1;
@@ -43,11 +42,11 @@ public:
     void keyPressEvent(QKeyEvent *evt);
     void pauseMenu();
     void gameOver(int winner);
-    int getDirection1();
-    int getDirection2();
+    int getDirection();
     bool isPaused();
     void setPart(int i, int x, int y);
     void resetObjects();
+    void setPlayer(int player);
 
 public slots:
     void updateField();
