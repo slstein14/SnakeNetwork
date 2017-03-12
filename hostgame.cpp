@@ -131,7 +131,7 @@ void HostGame::newConnection()
         }
         else if(!p2connect){
             socketp2 = server->nextPendingConnection();
-            connect(socketp2, SIGNAL(readyRead()),this, SLOT(p1readyRead()));
+            connect(socketp2, SIGNAL(readyRead()),this, SLOT(p2readyRead()));
             connect(socketp2, SIGNAL(disconnected()),this, SLOT(p2Disconnected()));
         }
     }
