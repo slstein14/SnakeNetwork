@@ -167,6 +167,21 @@ void HostGame::p1readyRead()
         ui->Player1_Name->setText(data);
         p1connect=true;
         qDebug() << "Player" << data << "Has Joined";
+
+        QByteArray sendConnected1;
+           sendConnected1.append("CONNECTED;");
+           qDebug() << socketp1->state();
+           if(socketp1->state() == QAbstractSocket::ConnectedState)
+           {
+               sendConnected1.append("PLAYER1");
+               socketp1->write(sendConnected1); //write the data itself
+               socketp1->waitForBytesWritten();
+               gameStarted=true;
+           }
+           else
+           {
+               qDebug() << socketp1->errorString();
+           }
     }
     else if(gameStarted){
         QString command = data.split(";").first();
@@ -218,6 +233,20 @@ void HostGame::p2readyRead()
         ui->Player2_Name->setText(data);
         p2connect=true;
         qDebug() << "Player" << data << "Has Joined";
+        QByteArray sendConnected2;
+           sendConnected2.append("CONNECTED;");
+           qDebug() << socketp1->state();
+           if(socketp1->state() == QAbstractSocket::ConnectedState)
+           {
+               sendConnected2.append("PLAYER2");
+               socketp1->write(sendConnected2); //write the data itself
+               socketp1->waitForBytesWritten();
+               gameStarted=true;
+           }
+           else
+           {
+               qDebug() << socketp1->errorString();
+           }
     }
     else if(gameStarted){
         QString command = data.split(";").first();
