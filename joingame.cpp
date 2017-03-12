@@ -100,9 +100,13 @@ void JoinGame::readyRead()
             qDebug()<<data;
             if(data.split(";").last()=="PLAYER1"){
                 game2->setPlayer(1);
+                ui->SnakeColor->setText("Your Snake Will Be: Yellow");
+                ui->SnakeColor->setStyleSheet("QLabel { color : Yellow; }");
             }
             else if(data.split(";").last()=="PLAYER2"){
                 game2->setPlayer(2);
+                ui->SnakeColor->setText("Your Snake Will Be: Red");
+                ui->SnakeColor->setStyleSheet("QLabel { color : Red; }");
             }
             qDebug()<<"Send READY";
             QByteArray readyData;
