@@ -92,13 +92,13 @@ void HostGame::setHostIP(QString address){ hostIP = address; }
 void HostGame::on_pushButton_clicked()
 {
     if(p1connect&&p2connect){
-        QByteArray sendData;
-           sendData.append("STARTED;");
+        QByteArray sendStarted1;
+           sendStarted1.append("STARTED;");
            qDebug() << socketp1->state();
            if(socketp1->state() == QAbstractSocket::ConnectedState)
            {
-               sendData.append("PLAYER1");
-               socketp1->write(sendData); //write the data itself
+               sendStarted1.append("PLAYER1");
+               socketp1->write(sendStarted1); //write the data itself
                socketp1->waitForBytesWritten();
                gameStarted=true;
            }
@@ -106,11 +106,13 @@ void HostGame::on_pushButton_clicked()
            {
                qDebug() << socketp1->errorString();
            }
+           QByteArray sendStarted2;
+              sendStarted2.append("STARTED;");
            qDebug() << socketp2->state();
            if(socketp2->state() == QAbstractSocket::ConnectedState)
            {
-               sendData.append("PLAYER2");
-               socketp2->write(sendData); //write the data itself
+               sendStarted2.append("PLAYER2");
+               socketp2->write(sendStarted2); //write the data itself
                socketp2->waitForBytesWritten();
                gameStarted=true;
            }
@@ -227,7 +229,7 @@ void HostGame::p2readyRead()
                 newDirection2=true;
             }
         }
-        else if(data=="READY"){
+        else if(command=="READY"){
             QStringList dataPieces=data.split(";");
             QString dir2=dataPieces.value(1);
             if(newDirection2==false){

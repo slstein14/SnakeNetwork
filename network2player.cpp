@@ -76,21 +76,16 @@ void Network2Player::paintEvent(QPaintEvent *e)
 {//Paint Event Draws The Images On The Screen
     QPainter painter(this);//Painter object indicates what window to render in
     apple->drawObject(painter);//Renders the Apple object
-int snake1=0;
-int snake2=0;
     for(int i=0;i<segments1.size();i++){//Renders each segment of the snake 1
         (*(segments1.at(i))).drawObject(painter);
-        snake1++;
     }
     for(int i=0;i<segments2.size();i++){//Renders each segment of the snake 2
         (*(segments2.at(i))).drawObject(painter);
-        snake2++;
     }
 
     for(int i=0;i<walls.size();i++){//Renders each wall segment
         (*(walls.at(i))).drawObject(painter);
     }
-    qDebug()<<"Snake1 "<<snake1<<" Snake2 "<<snake2;
 }
 
 void Network2Player::keyPressEvent(QKeyEvent *evt)
@@ -243,9 +238,11 @@ void Network2Player::setPlayer(int player)
 {
     if(player==1){
         direction=2;
+        qDebug()<<"Player1";
     }
     else if(player==2){
         direction=1;
+        qDebug()<<"Player2";
     }
     else{
         qDebug()<<"Player out of range";

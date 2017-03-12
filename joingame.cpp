@@ -97,6 +97,7 @@ void JoinGame::readyRead()
                 game2 = new Network2Player();
             }
             game2->show();
+            qDebug()<<data;
             if(data.split(";").last()=="PLAYER1"){
                 game2->setPlayer(1);
             }
