@@ -221,6 +221,9 @@ void HostGame::p1readyRead()
                }
                timer->stop();
         }
+        else if(data=="STARTGAME"){
+            this->startGame();
+        }
     }
 }
 
@@ -617,6 +620,40 @@ void HostGame::resetVars()
     player2lost=false;
     direction1=2;
     direction2=1;
+}
+
+void HostGame::startGame()
+{
+    if(p1connect&&p2connect){
+        QByteArray sendStarted1;
+           sendStarted1.append("STARTED;");
+           qDebug() << socketp1->state();
+           if(socketp1->state() == QAbstractSocket::ConnectedState)
+           {
+               sendStarted1.append("PLAYER1");
+               socketp1->write(sendStarted1); //write the data itself
+               socketp1->waitForBytesWritten();
+               gameStarted=true;
+           }
+           else
+           {
+               qDebug() << socketp1->errorString();
+           }
+           QByteArray sendStarted2;
+              sendStarted2.append("STARTED;");
+           qDebug() << socketp2->state();
+           if(socketp2->state() == QAbstractSocket::ConnectedState)
+           {
+               sendStarted2.append("PLAYER2");
+               socketp2->write(sendStarted2); //write the data itself
+               socketp2->waitForBytesWritten();
+               gameStarted=true;
+           }
+           else
+           {
+               qDebug() << socketp2->errorString();
+           }
+    }
 }
 
 

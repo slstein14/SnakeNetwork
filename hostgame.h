@@ -85,6 +85,7 @@ private:
     void moveSnake();
     void moveApple();
     void resetVars();
+    void startGame();
 
 };
 

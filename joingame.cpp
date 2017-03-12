@@ -207,3 +207,20 @@ void JoinGame::readyRead()
         }
     }
 }
+
+void JoinGame::on_StartButton_clicked()
+{
+    qDebug()<<"Send STARTGAME";
+    QByteArray startData;
+    startData.append("STARTGAME;");
+    qDebug() << socket->state();
+    if(socket->state() == QAbstractSocket::ConnectedState)
+    {
+        socket->write(startData); //write the data itself
+        socket->waitForBytesWritten();
+    }
+    else
+    {
+        qDebug() << socket->errorString();
+    }
+}

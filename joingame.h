@@ -59,6 +59,8 @@ private slots:
     void Disconnected();
     void readyRead();
 
+    void on_StartButton_clicked();
+
 private:
     Ui::JoinGame *ui;
     QTcpSocket *socket;
