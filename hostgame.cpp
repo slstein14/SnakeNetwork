@@ -143,11 +143,11 @@ void HostGame::p2Disconnected()
 
 void HostGame::p1readyRead()
 {
-    qDebug()<<"readyRead";
+    qDebug()<<"p1readyRead";
     QString data;
     data = socket->readAll();
     if(!p1connect){
-        ui->Player2_Name->setText(data);
+        ui->Player1_Name->setText(data);
         p1connect=true;
         qDebug() << "Player" << data << "Has Joined";
     }
@@ -189,7 +189,7 @@ void HostGame::p1readyRead()
 
 void HostGame::p2readyRead()
 {
-    qDebug()<<"readyRead";
+    qDebug()<<"p2readyRead";
     QString data;
     data = socket->readAll();
     if(!p2connect){
