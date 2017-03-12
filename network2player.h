@@ -29,9 +29,7 @@ private:
     int matrix[48][64];
     bool paused;
     int direction1;
-    bool newDirection1;
     int direction2;
-    bool newDirection2;
     QMessageBox *msg;
     QMessageBox *pbox;
     QPixmap *snakeImage1;
@@ -47,7 +45,6 @@ public:
     void gameOver(int winner);
     int getDirection1();
     int getDirection2();
-    void resetDirectionKeys();
     bool isPaused();
     void setPart(int i, int x, int y);
     void resetObjects();

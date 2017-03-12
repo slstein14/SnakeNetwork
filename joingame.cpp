@@ -70,7 +70,7 @@ void JoinGame::newConnection()
 
 void JoinGame::Disconnected()
 {
-    game2->resetDirectionKeys();
+    //game2->resetDirectionKeys();
     qDebug() << "Disconnected";
 
 }

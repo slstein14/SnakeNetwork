@@ -47,9 +47,7 @@ Network2Player::Network2Player(QWidget *parent) :
     appleImage = new QPixmap("Images/apple.png");
 
     direction1=2;
-    newDirection1=false;
     direction2=1;
-    newDirection2=false;
 
     for(int i=0;i<48;i++){
         for(int j=0;j<64;j++){
@@ -109,69 +107,69 @@ void Network2Player::keyPressEvent(QKeyEvent *evt)
         break;
     }
 
-    if(false==newDirection1){
+    //if(false==newDirection1){
         qDebug()<<"Key 1 Event?";
         switch(evt->key())
             {//Sets the snake based on the arrow keys, and pauses based on P and Esc
             case Qt::Key_Right:
                 if(direction1!=1){
-                    newDirection1=true;
+                   // newDirection1=true;
                     direction1=2;
                 }
                 break;
             case Qt::Key_Down:
                 if(direction1!=0){
-                    newDirection1=true;
+                    //newDirection1=true;
                     direction1=3;
                 }
                 break;
             case Qt::Key_Up:
                 if(direction1!=3){
-                    newDirection1=true;
+                    //newDirection1=true;
                     direction1=0;
                 }
                 break;
             case Qt::Key_Left:
                 if(direction1!=2){
-                    newDirection1=true;
+                    //newDirection1=true;
                     direction1=1;
                 }
                 break;
             default:
                 break;
         }
-    }
-    if(false==newDirection2){
+    //}
+    //if(false==newDirection2){
         qDebug()<<"Key 2 Event";
         switch(evt->key())
             {//Sets the snake based on the arrow keys, and pauses based on P and Esc
             case Qt::Key_D:
                 if(direction2!=1){
-                    newDirection2=true;
+                   // newDirection2=true;
                     direction2=2;
                 }
                 break;
                 case Qt::Key_S:
                 if(direction2!=0){
-                    newDirection2=true;
+                    //newDirection2=true;
                     direction2=3;
                 }
                 break;
             case Qt::Key_W:
                 if(direction2!=3){
-                    newDirection2=true;
+                    //newDirection2=true;
                     direction2=0;
                 }
                 break;
             case Qt::Key_A:
                 if(direction2!=2){
-                    newDirection2=true;
+                    //newDirection2=true;
                     direction2=1;
                 }
                 break;
             default:
                 break;
-        }
+        //}
     }
 }
 
@@ -247,13 +245,6 @@ int Network2Player::getDirection2()
 {
     return this->direction2;
 }
-
-void Network2Player::resetDirectionKeys()
-{
-    this->newDirection1=false;
-    this->newDirection2=false;
-}
-
 
 bool Network2Player::isPaused()
 {

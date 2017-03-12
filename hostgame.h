@@ -62,6 +62,8 @@ public:
 
     bool p2connect;
     bool gameStarted;
+    bool newDirection1;
+    bool newDirection2;
 
 
 private slots:

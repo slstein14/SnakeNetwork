@@ -24,6 +24,8 @@ HostGame::HostGame(QWidget *parent) :
 
     direction1=2;
     direction2=1;
+    newDirection1=false;
+    newDirection2=false;
 
 
     //initialize image files
@@ -140,8 +142,14 @@ void HostGame::readyRead()
             QString dir1=dataPieces.value(1);
             QString dir2=dataPieces.value(2);
             //qDebug()<<"dir1 "<<dir1<<" dir2 "<<dir2;
-            direction1=dir1.toInt();
-            direction2=dir2.toInt();
+            if(newDirection1==false){
+                direction1=dir1.toInt();
+                newDirection1=true;
+            }
+            if(newDirection2==false){
+                direction2=dir2.toInt();
+                newDirection2=true;
+            }
         }
         else if(data=="PAUSE"){
             paused=true;
@@ -169,6 +177,8 @@ void HostGame::updateField()
         //Renders the new snake location first
         //Otherwise it looks like it takes an extra tick to eat apples and collide with walls
         this->moveSnake();
+        newDirection1=false;
+        newDirection2=false;
         //Create a new apple if it has been eaten
         if(appleEatenBy1||appleEatenBy2){
             this->moveApple();

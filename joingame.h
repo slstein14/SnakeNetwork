@@ -43,9 +43,9 @@ public:
     vector<RenderObject*>segments1;
     vector<RenderObject*>segments2;
     int direction1;
-    bool newDirection1;
+   // bool newDirection1;
     int direction2;
-    bool newDirection2;
+   // bool newDirection2;
     QMessageBox *msg;
     QMessageBox *pbox;
     QPixmap *snakeImage1;
