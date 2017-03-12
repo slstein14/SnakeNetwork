@@ -212,7 +212,7 @@ void JoinGame::on_StartButton_clicked()
 {
     qDebug()<<"Send STARTGAME";
     QByteArray startData;
-    startData.append("STARTGAME;");
+    startData.append("STARTGAME");
     qDebug() << socket->state();
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
