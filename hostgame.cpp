@@ -8,6 +8,8 @@ HostGame::HostGame(QWidget *parent) :
     ui->setupUi(this);
     p2connect=false;
     p2connect=false;
+    p1ready=false;
+    p2ready=false;
     gameStarted=false;
     paused=false;
 
@@ -116,7 +118,6 @@ void HostGame::on_pushButton_clicked()
            {
                qDebug() << socketp2->errorString();
            }
-           timer->start();
     }
 }
 
@@ -175,6 +176,10 @@ void HostGame::p1readyRead()
                 direction1=dir1.toInt();
                 newDirection1=true;
             }
+            p1ready=true;
+            if(p2ready&&p1ready){
+                timer->start();
+            }
         }
         else if(data=="PAUSE"){
             paused=true;
@@ -213,6 +218,10 @@ void HostGame::p2readyRead()
             if(newDirection2==false){
                 direction2=dir2.toInt();
                 newDirection2=true;
+            }
+            p2ready=true;
+            if(p2ready&&p1ready){
+                timer->start();
             }
         }
         else if(data=="PAUSE"){

@@ -63,6 +63,8 @@ public:
 
     bool p1connect;
     bool p2connect;
+    bool p1ready;
+    bool p2ready;
     bool gameStarted;
     bool newDirection1;
     bool newDirection2;
