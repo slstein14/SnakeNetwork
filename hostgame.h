@@ -31,7 +31,8 @@ public:
 
     QString hostIP;
     void setHostIP(QString address);
-    QTcpSocket *socket;
+    QTcpSocket *socketp1;
+    QTcpSocket *socketp2;
     QTcpServer *server;
 
     QTimer *timer;
