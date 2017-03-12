@@ -105,7 +105,9 @@ void JoinGame::readyRead()
             }
             qDebug()<<"Send READY";
             QByteArray readyData;
+            QString dir=QString::number(game2->getDirection());
             readyData.append("READY;");
+            readyData.append(dir);
             qDebug() << socket->state();
             if(socket->state() == QAbstractSocket::ConnectedState)
             {

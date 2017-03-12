@@ -167,7 +167,6 @@ void HostGame::p1readyRead()
         qDebug() << "Player" << data << "Has Joined";
     }
     else if(gameStarted){
-
         QString command = data.split(";").first();
         if(command=="UPDATE"){
             QStringList dataPieces=data.split(";");
@@ -177,7 +176,13 @@ void HostGame::p1readyRead()
                 newDirection1=true;
             }
         }
-        else if(data=="READY"){
+        else if(command=="READY"){
+            QStringList dataPieces=data.split(";");
+            QString dir1=dataPieces.value(1);
+            if(newDirection1==false){
+                direction1=dir1.toInt();
+                newDirection1=true;
+            }
             p1ready=true;
             if(p2ready&&p1ready){
                 timer->start();
@@ -223,6 +228,12 @@ void HostGame::p2readyRead()
             }
         }
         else if(data=="READY"){
+            QStringList dataPieces=data.split(";");
+            QString dir2=dataPieces.value(1);
+            if(newDirection2==false){
+                direction2=dir2.toInt();
+                newDirection2=true;
+            }
             p2ready=true;
             if(p2ready&&p1ready){
                 timer->start();
