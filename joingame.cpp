@@ -91,10 +91,12 @@ void JoinGame::readyRead()
             if(data.split(";").last()=="PLAYER1"){
                 ui->SnakeColor->setText("Your Snake Will Be: Yellow");
                 ui->SnakeColor->setStyleSheet("QLabel { color : Yellow; }");
+                ui->StartButton->setDisabled(false);
             }
             else if(data.split(";").last()=="PLAYER2"){
                 ui->SnakeColor->setText("Your Snake Will Be: Red");
                 ui->SnakeColor->setStyleSheet("QLabel { color : Red; }");
+                ui->StartButton->setDisabled(true);
             }
         }
         else if(command=="STARTED"){
