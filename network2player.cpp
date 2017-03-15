@@ -151,7 +151,11 @@ int Network2Player::getDirection()
 
 void Network2Player::setPart(int i, int x, int y)
 {
-    if(i==1){
+    if(i==0){
+        apple->setXCoord(x);
+        apple->setYCoord(y);
+    }
+    else if(i==1){
         RenderObject *player1=new RenderObject(this);
         player1->setXCoord(x);
         player1->setYCoord(y);
@@ -164,10 +168,6 @@ void Network2Player::setPart(int i, int x, int y)
         player2->setYCoord(y);
         player2->setImage(snakeImage2);
         segments2.push_back(player2);
-    }
-    else if(i==3){
-        apple->setXCoord(x);
-        apple->setYCoord(y);
     }
 }
 

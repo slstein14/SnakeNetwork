@@ -3,7 +3,6 @@
 #include <QWidget>
 #include <QTcpSocket>
 #include <QTcpServer>
-
 #include "renderobject.h"
 #include <QPixmap>
 #include <QTimer>
@@ -13,7 +12,6 @@
 #include <QPushButton>
 #include <vector>
 #include <QGenericMatrix>
-#include <vector>
 #include <time.h>
 using namespace std;
 
@@ -35,38 +33,28 @@ public:
     QList<QTcpSocket*>socket;
 
     QTimer *timer;
-    RenderObject *player1;
-    RenderObject *player2;
     RenderObject* wall;
     RenderObject* apple;
     vector<RenderObject*>walls;
-    vector<RenderObject*>segments1;
-    vector<RenderObject*>segments2;
+    vector<vector<RenderObject*>>snakes;
     int matrix[48][64];
-    bool appleEatenBy1;
-    bool appleEatenBy2;
     int difficulty;
-    int score1;
-    int score2;
-    int direction1;
-    int direction2;
-    bool player1lost;
-    bool player2lost;
     QMessageBox *msg;
     QMessageBox *pbox;
-    QPixmap *snakeImage1;
-    QPixmap *snakeImage2;
     QPixmap *wallImage;
     QPixmap *appleImage;
-
-    bool p1connect;
-    bool p2connect;
-    bool p1ready;
-    bool p2ready;
     bool gameStarted;
-    bool newDirection1;
-    bool newDirection2;
+    bool appleEaten;
 
+
+    vector<QPixmap*> snakeImage;
+    vector<bool> connected;
+    vector<bool> ready;
+    vector<bool> newDirection;
+    vector<bool> playerlost;
+    vector<int> direction;
+    vector<int> score;
+    int connectedPlayers;
 
 private slots:
     void newConnection();
@@ -74,13 +62,13 @@ private slots:
     void Disconnected();
     void readyRead();
 
-
 private:
     Ui::HostGame *ui;
     void moveSnake();
     void moveApple();
     void resetVars();
     void startGame();
+    void initSnake();
 
 };
 

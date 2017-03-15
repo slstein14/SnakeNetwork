@@ -134,17 +134,17 @@ void JoinGame::readyRead()
     else if(command=="UPDATE"){
         qDebug()<<"Recieved UPDATE";
         QStringList pieces = data.split( ";" );
-        int onPart=1;
+        int onPart=0;
         game2->resetObjects();
         for(int i=0;i<pieces.length();i++){
-            if(pieces.value(i)=="SNAKE1"){
+            if(pieces.value(i)=="APPLE"){
+                onPart=0;
+            }
+            else if(pieces.value(i)=="SNAKE1"){
                 onPart=1;
             }
             else if(pieces.value(i)=="SNAKE2"){
                 onPart=2;
-            }
-            else if(pieces.value(i)=="APPLE"){
-                onPart=3;
             }
             else{
                 if((0!=pieces.value(i).toInt())&&(0!=pieces.value(i+1).toInt())){

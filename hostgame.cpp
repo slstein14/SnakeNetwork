@@ -6,10 +6,6 @@ HostGame::HostGame(QWidget *parent) :
     ui(new Ui::HostGame)
 {
     ui->setupUi(this);
-    p2connect=false;
-    p2connect=false;
-    p1ready=false;
-    p2ready=false;
     gameStarted=false;
 
     server = new QTcpServer(this);
@@ -23,15 +19,7 @@ HostGame::HostGame(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(updateField()));
     //timer->start();
 
-    direction1=2;
-    direction2=1;
-    newDirection1=false;
-    newDirection2=false;
-
-
     //initialize image files
-    snakeImage1 = new QPixmap("Images/snakeSegment.png");
-    snakeImage2 = new QPixmap("Images/redsnake.png");
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 
@@ -47,36 +35,14 @@ HostGame::HostGame(QWidget *parent) :
         }
     }
 
-    //initialize snake
-    for(int i=5;i>2;i--){
-        player1 = new RenderObject(this);
-        player1->setXCoord(i);
-        player1->setYCoord(2);
-        player1->setImage(snakeImage1);
-        segments1.push_back(player1);
-        matrix[i][2]=1;
-    }
-
-    for(int i=59;i<62;i++){
-        player2 = new RenderObject(this);
-        player2->setXCoord(i);
-        player2->setYCoord(45);
-        player2->setImage(snakeImage2);
-        segments2.push_back(player2);
-        matrix[i][45]=4;
-    }
-
     //initialize apple randomly
     srand(time(0));
     apple = new RenderObject(this);
     apple->setImage(appleImage);
     this->moveApple();
+    appleEaten=false;
 
-    score1=0;
-    score2=0;
-
-    player1lost=false;
-    player2lost=false;
+    connectedPlayers=0;
 }
 
 HostGame::~HostGame()
@@ -89,71 +55,128 @@ void HostGame::setHostIP(QString address){ hostIP = address; }
 void HostGame::newConnection()
 {
     while (server->hasPendingConnections()){
-        qDebug()<<"Has pending connections";
-        QTcpSocket *temp=server->nextPendingConnection();
-        socket.push_back(temp);
-        connect(temp, SIGNAL(readyRead()),this, SLOT(readyRead()));
-        connect(temp, SIGNAL(disconnected()),this, SLOT(Disconnected()));
+        if(socket.size()<8){
+            qDebug()<<"Has pending connections";
+            QTcpSocket *temp=server->nextPendingConnection();
+            socket.push_back(temp);
+            connect(temp, SIGNAL(readyRead()),this, SLOT(readyRead()));
+            connect(temp, SIGNAL(disconnected()),this, SLOT(Disconnected()));
+            connectedPlayers++;
+            this->initSnake();
+        }
     }
 }
 
-void HostGame::updateField()
+
+void HostGame::initSnake()
 {
-    //Renders the new snake location first
-    //Otherwise it looks like it takes an extra tick to eat apples and collide with walls
-    this->moveSnake();
-    newDirection1=false;
-    newDirection2=false;
-    //Create a new apple if it has been eaten
-    if(appleEatenBy1||appleEatenBy2){
-        this->moveApple();
+    //initialize snakes
+    vector<RenderObject*>segments;
+
+    if(connectedPlayers==1){
+        for(int i=4;i>1;i--){
+            RenderObject *player1 = new RenderObject(this);
+            player1->setXCoord(i);
+            player1->setYCoord(2);
+            QPixmap *snakeImage1 = new QPixmap("Images/snakeSegment.png");
+            snakeImage.push_back(snakeImage1);
+            player1->setImage(snakeImage1);
+            segments.push_back(player1);
+            matrix[i][2]=1;
+        }
     }
-    //Redraws the entire screen at once
-    //this->update();
-
-    QByteArray sendUpdateData;
-       sendUpdateData.append("UPDATE;SNAKE1;");
-       for(int i=0;i<segments1.size();i++){
-          QString temp=QString::number((*(segments1.at(i))).getXCoord());
-          sendUpdateData.append(temp);
-          sendUpdateData.append(";");
-
-          temp=QString::number((*(segments1.at(i))).getYCoord());
-          sendUpdateData.append(temp);
-          sendUpdateData.append(";");
-       }
-       sendUpdateData.append("SNAKE2;");
-       for(int i=0;i<segments2.size();i++){
-          QString temp=QString::number((*(segments2.at(i))).getXCoord());
-          sendUpdateData.append(temp);
-          sendUpdateData.append(";");
-
-          temp=QString::number((*(segments2.at(i))).getYCoord());
-          sendUpdateData.append(temp);
-          sendUpdateData.append(";");
-       }
-
-       sendUpdateData.append("APPLE;");
-       QString temp=QString::number(apple->getXCoord());
-       sendUpdateData.append(temp);
-       sendUpdateData.append(";");
-       temp=QString::number(apple->getYCoord());
-       sendUpdateData.append(temp);
-       sendUpdateData.append(";");
-       //qDebug() << socket->state();
-       for(int i=0;i<socket.size();i++){
-           QTcpSocket* pClient = socket.at(i);
-           if(pClient->state() == QAbstractSocket::ConnectedState)
-           {
-               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
-               pClient->write(sendUpdateData); //write the data itself
-               pClient->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() <<"update send fail"<< pClient->errorString();
-           }
+    else if(connectedPlayers==2){
+        for(int i=59;i<62;i++){
+            RenderObject *player2 = new RenderObject(this);
+            player2->setXCoord(i);
+            player2->setYCoord(45);
+            QPixmap *snakeImage2 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage2);
+            player2->setImage(snakeImage2);
+            segments.push_back(player2);
+            matrix[i][45]=4;
+        }
     }
+    else if(connectedPlayers==3){
+        for(int i=4;i>1;i--){
+            RenderObject *player3 = new RenderObject(this);
+            player3->setXCoord(i);
+            player3->setYCoord(45);
+            QPixmap *snakeImage3 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage3);
+            player3->setImage(snakeImage3);
+            segments.push_back(player3);
+            matrix[i][45]=1;
+        }
+    }
+    else if(connectedPlayers==4){
+        for(int i=59;i<62;i++){
+            RenderObject *player4 = new RenderObject(this);
+            player4->setXCoord(i);
+            player4->setYCoord(2);
+            QPixmap *snakeImage4 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage4);
+            player4->setImage(snakeImage4);
+            segments.push_back(player4);
+            matrix[i][2]=4;
+        }
+    }
+    else if(connectedPlayers==5){
+        for(int i=4;i>1;i--){
+            RenderObject *player5 = new RenderObject(this);
+            player5->setXCoord(i);
+            player5->setYCoord(16);
+            QPixmap *snakeImage5 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage5);
+            player5->setImage(snakeImage5);
+            segments.push_back(player5);
+            matrix[i][16]=1;
+        }
+    }
+    else if(connectedPlayers==6){
+        for(int i=59;i<62;i++){
+            RenderObject *player6 = new RenderObject(this);
+            player6->setXCoord(i);
+            player6->setYCoord(31);
+            QPixmap *snakeImage6 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage6);
+            player6->setImage(snakeImage6);
+            segments.push_back(player6);
+            matrix[i][31]=4;
+        }
+    }
+    else if(connectedPlayers==7){
+        for(int i=4;i>1;i--){
+            RenderObject *player7 = new RenderObject(this);
+            player7->setXCoord(i);
+            player7->setYCoord(31);
+            QPixmap *snakeImage7 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage7);
+            player7->setImage(snakeImage7);
+            segments.push_back(player7);
+            matrix[i][31]=1;
+        }
+    }
+    else if(connectedPlayers==8){
+        for(int i=59;i<62;i++){
+            RenderObject *player8 = new RenderObject(this);
+            player8->setXCoord(i);
+            player8->setYCoord(16);
+            QPixmap *snakeImage8 = new QPixmap("Images/redsnake.png");
+            snakeImage.push_back(snakeImage8);
+            player8->setImage(snakeImage8);
+            segments.push_back(player8);
+            matrix[i][16]=4;
+        }
+    }
+    snakes.push_back(segments);
+
+    connected.push_back(false);
+    ready.push_back(false);
+    direction.push_back(2);
+    newDirection.push_back(false);
+    score.push_back(0);
+    playerlost.push_back(false);
 }
 
 void HostGame::Disconnected()
@@ -165,12 +188,11 @@ void HostGame::Disconnected()
             playerNum=i+1;
         }
     }
+    connected.at(playerNum-1)=false;
     if(1==playerNum){
-        p1connect=false;
         ui->Player1_Name->setText("No Player 1 Connected");
     }
     else if(2==playerNum){
-        p2connect=false;
         ui->Player2_Name->setText("No Player 2 Connected");
     }
     timer->stop();
@@ -191,19 +213,18 @@ void HostGame::readyRead()
     qDebug()<<"Player Number "<<playerNum;
     QString data;
     data = pClient->readAll();
-    if(playerNum==1){
-        if(!p1connect){
-            ui->Player1_Name->setText(data);
-            p1connect=true;
+        if(!connected.at(playerNum)){
+            connected.at(playerNum)=true;
             qDebug() << "Player" << data << "Has Joined";
-
-            QByteArray sendConnected1;
-               sendConnected1.append("CONNECTED;");
+            QByteArray sendConnected;
+               sendConnected.append("CONNECTED;");
                qDebug() << pClient->state();
                if(pClient->state() == QAbstractSocket::ConnectedState)
                {
-                   sendConnected1.append("PLAYER1");
-                   pClient->write(sendConnected1); //write the data itself
+                   sendConnected.append("PLAYER");
+                   QString num = QString::number(playerNum);
+                   sendConnected.append(num);
+                   pClient->write(sendConnected); //write the data itself
                    pClient->waitForBytesWritten();
                    gameStarted=true;
                }
@@ -211,192 +232,158 @@ void HostGame::readyRead()
                {
                    qDebug() <<"Connectedp1"<< pClient->errorString();
                }
+
+               if(playerNum==1){
+                   ui->Player1_Name->setText(data);
+               }
+               else if(playerNum==2){
+                   ui->Player2_Name->setText(data);
+               }
         }
         else if(gameStarted){
             QString command = data.split(";").first();
             if(command=="UPDATE"){
                 QStringList dataPieces=data.split(";");
-                QString dir1=dataPieces.value(1);
-                if(newDirection1==false){
-                    direction1=dir1.toInt();
-                    newDirection1=true;
+                QString dir=dataPieces.value(1);
+                if(newDirection.at(playerNum)==false){
+                    direction.at(playerNum)=dir.toInt();
+                    newDirection.at(playerNum)=true;
                 }
             }
             else if(command=="READY"){
                 QStringList dataPieces=data.split(";");
                 QString dir1=dataPieces.value(1);
-                if(newDirection1==false){
-                    direction1=dir1.toInt();
-                    newDirection1=true;
+                if(newDirection.at(playerNum)==false){
+                    direction.at(playerNum)=dir1.toInt();
+                    newDirection.at(playerNum)=true;
                 }
-                p1ready=true;
-                if(p2ready&&p1ready){
-                    timer->start();
-                }
+                ready.at(playerNum)=true;
+//                if(ready.at(playerNum)&&p1ready){
+//                    timer->start();
+//                }
             }
             else if(data=="STARTGAME"){
                 this->startGame();
             }
         }
+}
+
+void HostGame::updateField()
+{
+    //Renders the new snake location first
+    //Otherwise it looks like it takes an extra tick to eat apples and collide with walls
+    this->moveSnake();
+    for(int i=0;i<snakes.size();i++){
+        newDirection.at(i)=false;
     }
-    else if(playerNum==2){
-            if(!p2connect){
-            ui->Player2_Name->setText(data);
-            p2connect=true;
-            qDebug() << "Player" << data << "Has Joined";
-            QByteArray sendConnected2;
-               sendConnected2.append("CONNECTED;");
-               qDebug() << pClient->state();
-               if(pClient->state() == QAbstractSocket::ConnectedState)
-               {
-                   sendConnected2.append("PLAYER2");
-                   pClient->write(sendConnected2); //write the data itself
-                   pClient->waitForBytesWritten();
-                   gameStarted=true;
-               }
-               else
-               {
-                   qDebug() <<"Connectedp2"<< pClient->errorString();
-               }
-        }
-        else if(gameStarted){
-            QString command = data.split(";").first();
-            if(command=="UPDATE"){
-                QStringList dataPieces=data.split(";");
-                QString dir2=dataPieces.value(1);
-                if(newDirection2==false){
-                    direction2=dir2.toInt();
-                    newDirection2=true;
-                }
+    //Create a new apple if it has been eaten
+    if(appleEaten){
+        this->moveApple();
+    }
+    //Redraws the entire screen at once
+    //this->update();
+
+        QByteArray sendUpdateData;
+        sendUpdateData.append("UPDATE;APPLE;");
+        QString temp=QString::number(apple->getXCoord());
+        sendUpdateData.append(temp);
+        sendUpdateData.append(";");
+        temp=QString::number(apple->getYCoord());
+        sendUpdateData.append(temp);
+        sendUpdateData.append(";");
+
+        for(int i=0;i<snakes.size();i++){
+            sendUpdateData.append("SNAKE");
+            QString num = QString::number(i+1);
+            sendUpdateData.append(num);
+            sendUpdateData.append(";");
+            for(int i=0;i<snakes.at(i).size();i++){
+               QString temp=QString::number((*(snakes.at(i).at(i))).getXCoord());
+               sendUpdateData.append(temp);
+               sendUpdateData.append(";");
+
+               temp=QString::number((*(snakes.at(i).at(i))).getYCoord());
+               sendUpdateData.append(temp);
+               sendUpdateData.append(";");
             }
-            else if(command=="READY"){
-                QStringList dataPieces=data.split(";");
-                QString dir2=dataPieces.value(1);
-                if(newDirection2==false){
-                    direction2=dir2.toInt();
-                    newDirection2=true;
-                }
-                p2ready=true;
-                if(p2ready&&p1ready){
-                    timer->start();
-                }
-            }
+
         }
+       for(int i=0;i<socket.size();i++){
+           QTcpSocket* pClient = socket.at(i);
+           if(pClient->state() == QAbstractSocket::ConnectedState)
+           {
+               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
+               pClient->write(sendUpdateData); //write the data itself
+               pClient->waitForBytesWritten();
+           }
+           else
+           {
+               qDebug() <<"update send fail"<< pClient->errorString();
+           }
     }
 }
 
 void HostGame::moveSnake()
 {//Moves the snake across the screen
 
-    //Snake 1
+    for(int i=0;i<snakes.size();i++){
+        vector<RenderObject*> moveSnake = snakes.at(i);
 
-    //Stores the last segment location so it knows where to add new segments
-    int backX1=(*(segments1.at(segments1.size()-1))).getXCoord();
-    int backY1=(*(segments1.at(segments1.size()-1))).getYCoord();
+        //Stores the last segment location so it knows where to add new segments
+        int backX1=(*(moveSnake.at(moveSnake.size()-1))).getXCoord();
+        int backY1=(*(moveSnake.at(moveSnake.size()-1))).getYCoord();
 
-    //Sets the back segment's location to 0 so the matrix doesn't think a snake is still there
-    matrix[backY1][backX1]=0;
+        //Sets the back segment's location to 0 so the matrix doesn't think a snake is still there
+        matrix[backY1][backX1]=0;
 
-    //Takes the back segment and moves it to the new front location, based on
-    //the direction last pressed by the player
-    //The other segments remain in place, but the new back segment will move next time
-    rotate(segments1.begin(),segments1.end()-1,segments1.end());
-    if(2==direction1){
-        (*(segments1.at(0))).setXCoord((*(segments1.at(1))).getXCoord()+1);
-        (*(segments1.at(0))).setYCoord((*(segments1.at(1))).getYCoord());
-    }
-    else if(1==direction1){
-        (*(segments1.at(0))).setXCoord((*(segments1.at(1))).getXCoord()-1);
-        (*(segments1.at(0))).setYCoord((*(segments1.at(1))).getYCoord());
-    }
-    else if(0==direction1){
-        (*(segments1.at(0))).setXCoord((*(segments1.at(1))).getXCoord());
-        (*(segments1.at(0))).setYCoord((*(segments1.at(1))).getYCoord()-1);
-    }
-    else{
-        (*(segments1.at(0))).setXCoord((*(segments1.at(1))).getXCoord());
-        (*(segments1.at(0))).setYCoord((*(segments1.at(1))).getYCoord()+1);
-    }
+        //Takes the back segment and moves it to the new front location, based on
+        //the direction last pressed by the player
+        //The other segments remain in place, but the new back segment will move next time
+        rotate(moveSnake.begin(),moveSnake.end()-1,moveSnake.end());
+        if(2==direction.at(i)){
+            (*(moveSnake.at(0))).setXCoord((*(moveSnake.at(1))).getXCoord()+1);
+            (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord());
+        }
+        else if(1==direction.at(i)){
+            (*(moveSnake.at(0))).setXCoord((*(moveSnake.at(1))).getXCoord()-1);
+            (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord());
+        }
+        else if(0==direction.at(i)){
+            (*(moveSnake.at(0))).setXCoord((*(moveSnake.at(1))).getXCoord());
+            (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord()-1);
+        }
+        else if(3==direction.at(i)){
+            (*(moveSnake.at(0))).setXCoord((*(moveSnake.at(1))).getXCoord());
+            (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord()+1);
+        }
 
-    //Checks if the snake has hit an apple
-    if(2==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()]){
-        //Flag causes a new apple to appear next tick
-        appleEatenBy1=true;
-        //Adds a segment to the snake
-        RenderObject *newseg = new RenderObject(this);
-        newseg->setXCoord(backX1);
-        newseg->setYCoord(backY1);
-        newseg->setImage(snakeImage1);
-        segments1.push_back(newseg);
-        //Increases the player score
-        score1++;
-    }
+        //Checks if the snake has hit an apple
+        if(2==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]){
+            //Flag causes a new apple to appear next tick
+            appleEaten=true;
+            //Adds a segment to the snake
+            RenderObject *newseg = new RenderObject(this);
+            newseg->setXCoord(backX1);
+            newseg->setYCoord(backY1);
+            newseg->setImage(snakeImage.at(i));
+            moveSnake.push_back(newseg);
+            //Increases the player score
+            score.at(i)++;
+        }
 
-    //Checks if the player has collided with a wall
-    if((3==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()])||(1==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()])){
-        //Stops all objects from moving in the background
-        qDebug()<<"P1 Collision Object "<<matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()]<<" At X "<<(*(segments1.at(0))).getXCoord()<<" Y "<<(*(segments1.at(0))).getYCoord();
-        qDebug()<<"Direction "<<direction1;
-        player1lost=true;
-    }
+        //Checks if the player has collided with a wall
+        if((3==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])||(1==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])){
+            //Stops all objects from moving in the background
+            qDebug()<<"P1 Collision Object "<<matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]<<" At X "<<(*(moveSnake.at(0))).getXCoord()<<" Y "<<(*(moveSnake.at(0))).getYCoord();
+            qDebug()<<"Direction "<<direction.at(i);
+            playerlost.at(i)=true;
+        }
 
-    //Sets the new front segment location to indicate a snake is there
-    matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()]=1;
-
-
-    //Snake 2
-
-    //Stores the last segment location so it knows where to add new segments1
-    int backX2=(*(segments2.at(segments2.size()-1))).getXCoord();
-    int backY2=(*(segments2.at(segments2.size()-1))).getYCoord();
-
-    //Sets the back segment's location to 0 so the matrix doesn't think a snake is still there
-    matrix[backY2][backX2]=0;
-    //Takes the back segment and moves it to the new front location, based on
-    //the direction last pressed by the player
-    //The other segments2 remain in place, but the new back segment will move next time
-    rotate(segments2.begin(),segments2.end()-1,segments2.end());
-    if(2==direction2){
-        (*(segments2.at(0))).setXCoord((*(segments2.at(1))).getXCoord()+1);
-        (*(segments2.at(0))).setYCoord((*(segments2.at(1))).getYCoord());
-    }
-    else if(1==direction2){
-        (*(segments2.at(0))).setXCoord((*(segments2.at(1))).getXCoord()-1);
-        (*(segments2.at(0))).setYCoord((*(segments2.at(1))).getYCoord());
-    }
-    else if(0==direction2){
-        (*(segments2.at(0))).setXCoord((*(segments2.at(1))).getXCoord());
-        (*(segments2.at(0))).setYCoord((*(segments2.at(1))).getYCoord()-1);
-    }
-    else{
-        (*(segments2.at(0))).setXCoord((*(segments2.at(1))).getXCoord());
-        (*(segments2.at(0))).setYCoord((*(segments2.at(1))).getYCoord()+1);
+        //Sets the new front segment location to indicate a snake is there
+        matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]=1;
     }
 
-    //Checks if the snake has hit an apple
-    if(2==matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()]){
-        //Flag causes a new apple to appear next tick
-        appleEatenBy2=true;
-        //Adds a segment to the snake
-        RenderObject *newseg = new RenderObject(this);
-        newseg->setXCoord(backX2);
-        newseg->setYCoord(backY2);
-        newseg->setImage(snakeImage2);
-        segments2.push_back(newseg);
-        //Increases the player score
-        score2++;
-    }
-
-    //Checks if the player has collided with a wall
-    if((3==matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()])||(1==matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()])){
-        player2lost=true;
-        qDebug()<<"P2 Collision Object "<<matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()]<<" At X "<<(*(segments2.at(0))).getXCoord()<<" Y "<<(*(segments2.at(0))).getYCoord();
-    }
-
-    //Sets the new front segment location to indicate a snake is there
-    matrix[(*(segments2.at(0))).getYCoord()][(*(segments2.at(0))).getXCoord()]=4;
-
-    if(player1lost&&player2lost){
+    if(playerlost.at(0)&&playerlost.at(1)){
         //Stops all objects from moving in the background
         timer->stop();
         QByteArray sendData;
@@ -415,7 +402,7 @@ void HostGame::moveSnake()
                }
            }
     }
-    else if(player1lost){
+    else if(playerlost.at(0)){
         //Stops all objects from moving in the background
         timer->stop();
         QByteArray sendData;
@@ -434,7 +421,7 @@ void HostGame::moveSnake()
                }
            }
     }
-    else if(player2lost){
+    else if(playerlost.at(2)){
         //Stops all objects from moving in the background
         timer->stop();
         QByteArray sendData;
@@ -475,8 +462,7 @@ void HostGame::moveApple()
     //Tells the matrix an apple now exists there
     matrix[y][x]=2;
     //Indicates a new apple has appeared
-    appleEatenBy2=false;
-    appleEatenBy1=false;
+    appleEaten=false;
 
 }
 
@@ -492,43 +478,27 @@ void HostGame::resetVars()
     }
 
     //initialize snake
-    segments1.clear();
-    segments2.clear();
-    for(int i=4;i>1;i--){
-        player1 = new RenderObject(this);
-        player1->setXCoord(i);
-        player1->setYCoord(1);
-        player1->setImage(snakeImage1);
-        segments1.push_back(player1);
-        matrix[i][1]=1;
+    for(int i=0;i<snakes.size();i++){
+        snakes.at(i).clear();
+        connected.clear();
+        ready.clear();
+        direction.clear();
+        newDirection.clear();
+        score.clear();
+        playerlost.clear();
     }
-
-    for(int i=60;i<63;i++){
-        player2 = new RenderObject(this);
-        player2->setXCoord(i);
-        player2->setYCoord(46);
-        player2->setImage(snakeImage2);
-        segments2.push_back(player2);
-        matrix[i][46]=4;
+    for(int i=0;i<connectedPlayers;i++){
+        initSnake();
     }
-
     //initialize apple randomly
     this->moveApple();
-
-    score1=0;
-    score2=0;
-
-    player1lost=false;
-    player2lost=false;
-    direction1=2;
-    direction2=1;
 }
 
 void HostGame::startGame()
 {
     for(int i=0;i<socket.size();i++){
         QTcpSocket* pClient = socket.at(i);
-        if(p1connect&&p2connect){
+        if(connected.at(1)&&connected.at(2)){
             QByteArray sendStarted;
                sendStarted.append("STARTED;");
                qDebug() << pClient->state();
@@ -549,5 +519,6 @@ void HostGame::startGame()
         }
     }
 }
+
 
 
