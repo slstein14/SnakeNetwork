@@ -215,62 +215,69 @@ void HostGame::readyRead()
     QString data;
     data = pClient->readAll();
     qDebug()<<data<<gameStarted;
-        if(!connected.at(playerNum)){
-            connected.at(playerNum)=true;
-            qDebug() << "Player" << data << "Has Joined";
-            QByteArray sendConnected;
-               sendConnected.append("CONNECTED;");
-               qDebug() << pClient->state();
-               if(pClient->state() == QAbstractSocket::ConnectedState)
-               {
-                   sendConnected.append("PLAYER");
-                   QString num = QString::number(playerNum);
-                   sendConnected.append(num);
-                   pClient->write(sendConnected); //write the data itself
-                   pClient->waitForBytesWritten();
-                  // gameStarted=true;
-               }
-               else
-               {
-                   qDebug() <<"Connectedp1"<< pClient->errorString();
-               }
+    if(!connected.at(playerNum)){
+        connected.at(playerNum)=true;
+        qDebug() << "Player" << data << "Has Joined";
+        QByteArray sendConnected;
+           sendConnected.append("CONNECTED;");
+           qDebug() << pClient->state();
+           if(pClient->state() == QAbstractSocket::ConnectedState)
+           {
+               sendConnected.append("PLAYER");
+               QString num = QString::number(playerNum);
+               sendConnected.append(num);
+               pClient->write(sendConnected); //write the data itself
+               pClient->waitForBytesWritten();
+              // gameStarted=true;
+           }
+           else
+           {
+               qDebug() <<"Connectedp1"<< pClient->errorString();
+           }
 
-               if(playerNum==0){
-                   ui->Player1_Name->setText(data);
-               }
-               else if(playerNum==1){
-                   ui->Player2_Name->setText(data);
-               }
+           if(playerNum==0){
+               ui->Player1_Name->setText(data);
+           }
+           else if(playerNum==1){
+               ui->Player2_Name->setText(data);
+           }
+    }
+    else if(!gameStarted){
+        qDebug()<<data;
+        if(data=="STARTGAME"){
+            this->startGame();
         }
-        else if(!gameStarted){
-            qDebug()<<data;
-            if(data=="STARTGAME"){
-                this->startGame();
+    }
+    else if(gameStarted){
+        QString command = data.split(";").first();
+        if(command=="UPDATE"){
+            QStringList dataPieces=data.split(";");
+            QString dir=dataPieces.value(1);
+            if(newDirection.at(playerNum)==false){
+                direction.at(playerNum)=dir.toInt();
+                newDirection.at(playerNum)=true;
             }
         }
-        else if(gameStarted){
-            QString command = data.split(";").first();
-            if(command=="UPDATE"){
-                QStringList dataPieces=data.split(";");
-                QString dir=dataPieces.value(1);
-                if(newDirection.at(playerNum)==false){
-                    direction.at(playerNum)=dir.toInt();
-                    newDirection.at(playerNum)=true;
+        else if(command=="READY"){
+            QStringList dataPieces=data.split(";");
+            QString dir=dataPieces.value(1);
+            if(newDirection.at(playerNum)==false){
+                direction.at(playerNum)=dir.toInt();
+                newDirection.at(playerNum)=true;
+            }
+            ready.at(playerNum)=true;
+
+            bool AllReady=true;
+            for(int j=0;j<snakes.size();j++){
+                if(!ready.at(j)){
+                    AllReady=false;
                 }
             }
-            else if(command=="READY"){
-                QStringList dataPieces=data.split(";");
-                QString dir1=dataPieces.value(1);
-                if(newDirection.at(playerNum)==false){
-                    direction.at(playerNum)=dir1.toInt();
-                    newDirection.at(playerNum)=true;
-                }
-                ready.at(playerNum)=true;
-//                if(ready.at(playerNum)&&p1ready){
-//                    timer->start();
-//                }
+            if(AllReady){
+                timer->start();
             }
         }
+    }
 }
 
 void HostGame::updateField()
