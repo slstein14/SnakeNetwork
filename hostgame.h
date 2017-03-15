@@ -31,8 +31,6 @@ public:
 
     QString hostIP;
     void setHostIP(QString address);
-    QTcpSocket *socketp1;
-    QTcpSocket *socketp2;
     QTcpServer *server;
     QList<QTcpSocket*>socket;
 
@@ -50,7 +48,6 @@ public:
     int difficulty;
     int score1;
     int score2;
-    bool paused;
     int direction1;
     int direction2;
     bool player1lost;
@@ -72,12 +69,7 @@ public:
 
 
 private slots:
-    void on_pushButton_clicked();
     void newConnection();
-    void p1Disconnected();
-    void p2Disconnected();
-    void p1readyRead();
-    void p2readyRead();
     void updateField();
     void Disconnected();
     void readyRead();

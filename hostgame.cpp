@@ -11,14 +11,10 @@ HostGame::HostGame(QWidget *parent) :
     p1ready=false;
     p2ready=false;
     gameStarted=false;
-    paused=false;
 
     server = new QTcpServer(this);
     // update to use this->ipAddress for localhost?
     server->listen(QHostAddress::Any, 5300);
-    //socket = new QTcpSocket(this);
-    socketp1 = new QTcpSocket(this);
-    socketp2 = new QTcpSocket(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
     //tick timer for movements
@@ -90,40 +86,6 @@ HostGame::~HostGame()
 
 void HostGame::setHostIP(QString address){ hostIP = address; }
 
-void HostGame::on_pushButton_clicked()
-{
-    if(p1connect&&p2connect){
-        QByteArray sendStarted1;
-           sendStarted1.append("STARTED;");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               sendStarted1.append("PLAYER1");
-               socketp1->write(sendStarted1); //write the data itself
-               socketp1->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp1->errorString();
-           }
-           QByteArray sendStarted2;
-              sendStarted2.append("STARTED;");
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               sendStarted2.append("PLAYER2");
-               socketp2->write(sendStarted2); //write the data itself
-               socketp2->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
-           }
-    }
-}
-
 void HostGame::newConnection()
 {
     while (server->hasPendingConnections()){
@@ -132,229 +94,64 @@ void HostGame::newConnection()
         socket.push_back(temp);
         connect(temp, SIGNAL(readyRead()),this, SLOT(readyRead()));
         connect(temp, SIGNAL(disconnected()),this, SLOT(Disconnected()));
-//        if(!p1connect){
-//            socketp1 = server->nextPendingConnection();
-//            connect(socketp1, SIGNAL(readyRead()),this, SLOT(p1readyRead()));
-//            connect(socketp1, SIGNAL(disconnected()),this, SLOT(p1Disconnected()));
-//        }
-//        else if(!p2connect){
-//            socketp2 = server->nextPendingConnection();
-//            connect(socketp2, SIGNAL(readyRead()),this, SLOT(p2readyRead()));
-//            connect(socketp2, SIGNAL(disconnected()),this, SLOT(p2Disconnected()));
-//        }
-    }
-}
-
-void HostGame::p1Disconnected()
-{
-    p1connect=false;
-    ui->Player1_Name->setText("No Player 1 Connected");
-    timer->stop();
-    this->resetVars();
-    qDebug() << "p1Disconnected";
-}
-
-void HostGame::p2Disconnected()
-{
-    p2connect=false;
-    ui->Player2_Name->setText("No Player 2 Connected");
-    timer->stop();
-    this->resetVars();
-    qDebug() << "p2Disconnected";
-}
-
-void HostGame::p1readyRead()
-{
-    qDebug()<<"p1readyRead";
-    QString data;
-    data = socketp1->readAll();
-    if(!p1connect){
-        ui->Player1_Name->setText(data);
-        p1connect=true;
-        qDebug() << "Player" << data << "Has Joined";
-
-        QByteArray sendConnected1;
-           sendConnected1.append("CONNECTED;");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               sendConnected1.append("PLAYER1");
-               socketp1->write(sendConnected1); //write the data itself
-               socketp1->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp1->errorString();
-           }
-    }
-    else if(gameStarted){
-        QString command = data.split(";").first();
-        if(command=="UPDATE"){
-            QStringList dataPieces=data.split(";");
-            QString dir1=dataPieces.value(1);
-            if(newDirection1==false){
-                direction1=dir1.toInt();
-                newDirection1=true;
-            }
-        }
-        else if(command=="READY"){
-            QStringList dataPieces=data.split(";");
-            QString dir1=dataPieces.value(1);
-            if(newDirection1==false){
-                direction1=dir1.toInt();
-                newDirection1=true;
-            }
-            p1ready=true;
-            if(p2ready&&p1ready){
-                timer->start();
-            }
-        }
-        else if(data=="PAUSE"){
-            paused=true;
-            QByteArray sendData;
-               sendData.append("PAUSED");
-               qDebug() << socketp1->state();
-               if(socketp1->state() == QAbstractSocket::ConnectedState)
-               {
-                   socketp1->write(sendData); //write the data itself
-                   socketp1->waitForBytesWritten();
-               }
-               else
-               {
-                   qDebug() << socketp1->errorString();
-               }
-               timer->stop();
-        }
-        else if(data=="STARTGAME"){
-            this->startGame();
-        }
-    }
-}
-
-void HostGame::p2readyRead()
-{
-    qDebug()<<"p2readyRead";
-    QString data;
-    data = socketp2->readAll();
-    if(!p2connect){
-        ui->Player2_Name->setText(data);
-        p2connect=true;
-        qDebug() << "Player" << data << "Has Joined";
-        QByteArray sendConnected2;
-           sendConnected2.append("CONNECTED;");
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               sendConnected2.append("PLAYER2");
-               socketp2->write(sendConnected2); //write the data itself
-               socketp2->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp1->errorString();
-           }
-    }
-    else if(gameStarted){
-        QString command = data.split(";").first();
-        if(command=="UPDATE"){
-            QStringList dataPieces=data.split(";");
-            QString dir2=dataPieces.value(1);
-            if(newDirection2==false){
-                direction2=dir2.toInt();
-                newDirection2=true;
-            }
-        }
-        else if(command=="READY"){
-            QStringList dataPieces=data.split(";");
-            QString dir2=dataPieces.value(1);
-            if(newDirection2==false){
-                direction2=dir2.toInt();
-                newDirection2=true;
-            }
-            p2ready=true;
-            if(p2ready&&p1ready){
-                timer->start();
-            }
-        }
-        else if(data=="PAUSE"){
-            paused=true;
-            QByteArray sendData;
-               sendData.append("PAUSED");
-               qDebug() << socketp2->state();
-               if(socketp2->state() == QAbstractSocket::ConnectedState)
-               {
-                   socketp2->write(sendData); //write the data itself
-                   socketp2->waitForBytesWritten();
-               }
-               else
-               {
-                   qDebug() << socketp2->errorString();
-               }
-               timer->stop();
-        }
     }
 }
 
 void HostGame::updateField()
 {
-    //Check that the game isn't paused
-    if(!paused){
-        //Renders the new snake location first
-        //Otherwise it looks like it takes an extra tick to eat apples and collide with walls
-        this->moveSnake();
-        newDirection1=false;
-        newDirection2=false;
-        //Create a new apple if it has been eaten
-        if(appleEatenBy1||appleEatenBy2){
-            this->moveApple();
-        }
-        //Redraws the entire screen at once
-        //this->update();
+    //Renders the new snake location first
+    //Otherwise it looks like it takes an extra tick to eat apples and collide with walls
+    this->moveSnake();
+    newDirection1=false;
+    newDirection2=false;
+    //Create a new apple if it has been eaten
+    if(appleEatenBy1||appleEatenBy2){
+        this->moveApple();
+    }
+    //Redraws the entire screen at once
+    //this->update();
 
-        QByteArray sendUpdateData;
-           sendUpdateData.append("UPDATE;SNAKE1;");
-           for(int i=0;i<segments1.size();i++){
-              QString temp=QString::number((*(segments1.at(i))).getXCoord());
-              sendUpdateData.append(temp);
-              sendUpdateData.append(";");
+    QByteArray sendUpdateData;
+       sendUpdateData.append("UPDATE;SNAKE1;");
+       for(int i=0;i<segments1.size();i++){
+          QString temp=QString::number((*(segments1.at(i))).getXCoord());
+          sendUpdateData.append(temp);
+          sendUpdateData.append(";");
 
-              temp=QString::number((*(segments1.at(i))).getYCoord());
-              sendUpdateData.append(temp);
-              sendUpdateData.append(";");
+          temp=QString::number((*(segments1.at(i))).getYCoord());
+          sendUpdateData.append(temp);
+          sendUpdateData.append(";");
+       }
+       sendUpdateData.append("SNAKE2;");
+       for(int i=0;i<segments2.size();i++){
+          QString temp=QString::number((*(segments2.at(i))).getXCoord());
+          sendUpdateData.append(temp);
+          sendUpdateData.append(";");
+
+          temp=QString::number((*(segments2.at(i))).getYCoord());
+          sendUpdateData.append(temp);
+          sendUpdateData.append(";");
+       }
+
+       sendUpdateData.append("APPLE;");
+       QString temp=QString::number(apple->getXCoord());
+       sendUpdateData.append(temp);
+       sendUpdateData.append(";");
+       temp=QString::number(apple->getYCoord());
+       sendUpdateData.append(temp);
+       sendUpdateData.append(";");
+       //qDebug() << socket->state();
+       for(int i=0;i<socket.size();i++){
+           QTcpSocket* pClient = socket.at(i);
+           if(pClient->state() == QAbstractSocket::ConnectedState)
+           {
+               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
+               pClient->write(sendUpdateData); //write the data itself
+               pClient->waitForBytesWritten();
            }
-           sendUpdateData.append("SNAKE2;");
-           for(int i=0;i<segments2.size();i++){
-              QString temp=QString::number((*(segments2.at(i))).getXCoord());
-              sendUpdateData.append(temp);
-              sendUpdateData.append(";");
-
-              temp=QString::number((*(segments2.at(i))).getYCoord());
-              sendUpdateData.append(temp);
-              sendUpdateData.append(";");
-           }
-
-           sendUpdateData.append("APPLE;");
-           QString temp=QString::number(apple->getXCoord());
-           sendUpdateData.append(temp);
-           sendUpdateData.append(";");
-           temp=QString::number(apple->getYCoord());
-           sendUpdateData.append(temp);
-           sendUpdateData.append(";");
-           //qDebug() << socket->state();
-           for(int i=0;i<socket.size();i++){
-               QTcpSocket* pClient = socket.at(i);
-               if(pClient->state() == QAbstractSocket::ConnectedState)
-               {
-                   //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
-                   pClient->write(sendUpdateData); //write the data itself
-                   pClient->waitForBytesWritten();
-               }
-               else
-               {
-                   qDebug() <<"update send fail"<< pClient->errorString();
-               }
+           else
+           {
+               qDebug() <<"update send fail"<< pClient->errorString();
            }
     }
 }
@@ -437,22 +234,6 @@ void HostGame::readyRead()
                     timer->start();
                 }
             }
-            else if(data=="PAUSE"){
-                paused=true;
-                QByteArray sendData;
-                   sendData.append("PAUSED");
-                   qDebug() << pClient->state();
-                   if(pClient->state() == QAbstractSocket::ConnectedState)
-                   {
-                       pClient->write(sendData); //write the data itself
-                       pClient->waitForBytesWritten();
-                   }
-                   else
-                   {
-                       qDebug() << "Pausep1"<<pClient->errorString();
-                   }
-                   timer->stop();
-            }
             else if(data=="STARTGAME"){
                 this->startGame();
             }
@@ -499,22 +280,6 @@ void HostGame::readyRead()
                 if(p2ready&&p1ready){
                     timer->start();
                 }
-            }
-            else if(data=="PAUSE"){
-                paused=true;
-                QByteArray sendData;
-                   sendData.append("PAUSED");
-                   qDebug() << pClient->state();
-                   if(pClient->state() == QAbstractSocket::ConnectedState)
-                   {
-                       pClient->write(sendData); //write the data itself
-                       pClient->waitForBytesWritten();
-                   }
-                   else
-                   {
-                       qDebug() << "Pausep2"<< pClient->errorString();
-                   }
-                   timer->stop();
             }
         }
     }

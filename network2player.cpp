@@ -32,14 +32,6 @@ Network2Player::Network2Player(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(updateField()));
     timer->start();
 
-    //Initialize Pause Menu
-    msg = new QMessageBox();
-    pbox = new QMessageBox();
-    pbox->setText("PAUSED");
-    pbox->addButton(QString("Continue") , QMessageBox::AcceptRole);
-    pbox->addButton(QString("Quit") , QMessageBox::RejectRole);
-    paused = false;
-
     //initialize image files
     snakeImage1 = new QPixmap("Images/snakeSegment.png");
     snakeImage2 = new QPixmap("Images/RedSnake.png");
@@ -91,74 +83,31 @@ void Network2Player::paintEvent(QPaintEvent *e)
 void Network2Player::keyPressEvent(QKeyEvent *evt)
 {//Detects what key the user has pressed
     qDebug()<<"Key Event";
-
-    switch(evt->key()){
-    case Qt::Key_Escape:
-    case Qt::Key_P:
-        if(!paused){
-            paused=true;
-        }
-        break;
-    }
-    qDebug()<<"Key 1 Event";
     switch(evt->key())
-        {//Sets the snake based on the arrow keys, and pauses based on P and Esc
+        {//Sets the snake based on the arrow keys
         case Qt::Key_Right:
             if(direction!=1){
-               // newDirection1=true;
                 direction=2;
             }
             break;
         case Qt::Key_Down:
             if(direction!=0){
-                //newDirection1=true;
                 direction=3;
             }
             break;
         case Qt::Key_Up:
             if(direction!=3){
-                //newDirection1=true;
                 direction=0;
             }
             break;
         case Qt::Key_Left:
             if(direction!=2){
-                //newDirection1=true;
                 direction=1;
             }
             break;
         default:
             break;
     }
-}
-
-//void Network2Player::moveSnake()
-//{
-//    //Checks if the snake has hit an apple
-//    if(2==matrix[(*(segments1.at(0))).getYCoord()][(*(segments1.at(0))).getXCoord()]){
-//        //Flag causes a new apple to appear next tick
-//        appleEatenBy1=true;
-//        //Adds a segment to the snake
-//        RenderObject *newseg = new RenderObject(this);
-//        newseg->setXCoord(backX1);
-//        newseg->setYCoord(backY1);
-//        newseg->setImage(snakeImage1);
-//        segments1.push_back(newseg);
-//        //Increases the player score
-//        score1++;
-//    }
-//}
-
-void Network2Player::pauseMenu()
-{//Pause Menu
-   pbox->show();
-   //If QUIT is clicked, it closes the game window
-   if(pbox->exec() == QMessageBox::RejectRole){
-       this->close();
-   }//Quit
-   else {
-       paused=false;
-   }//Continue
 }
 
 void Network2Player::gameOver(int winner)
@@ -198,12 +147,6 @@ void Network2Player::gameOver(int winner)
 int Network2Player::getDirection()
 {
     return this->direction;
-}
-
-
-bool Network2Player::isPaused()
-{
-    return this->paused;
 }
 
 void Network2Player::setPart(int i, int x, int y)
