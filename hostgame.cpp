@@ -309,12 +309,12 @@ void HostGame::updateField()
             QString num = QString::number(i+1);
             sendUpdateData.append(num);
             sendUpdateData.append(";");
-            for(int i=0;i<snakes.at(i).size();i++){
-               QString temp=QString::number((*(snakes.at(i).at(i))).getXCoord());
+            for(int j=0;j<snakes.at(i).size();j++){
+               QString temp=QString::number((*(snakes.at(i).at(j))).getXCoord());
                sendUpdateData.append(temp);
                sendUpdateData.append(";");
 
-               temp=QString::number((*(snakes.at(i).at(i))).getYCoord());
+               temp=QString::number((*(snakes.at(i).at(j))).getYCoord());
                sendUpdateData.append(temp);
                sendUpdateData.append(";");
             }
@@ -347,7 +347,7 @@ void HostGame::moveSnake()
 
         //Sets the back segment's location to 0 so the matrix doesn't think a snake is still there
         matrix[backY1][backX1]=0;
-
+        qDebug()<<"Back Y "<<backY1<<" Back X "<<backX1;
         //Takes the back segment and moves it to the new front location, based on
         //the direction last pressed by the player
         //The other segments remain in place, but the new back segment will move next time
@@ -433,7 +433,7 @@ void HostGame::moveSnake()
                }
            }
     }
-    else if(playerlost.at(2)){
+    else if(playerlost.at(1)){
         //Stops all objects from moving in the background
         timer->stop();
         QByteArray sendData;
