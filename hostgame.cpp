@@ -71,6 +71,7 @@ void HostGame::newConnection()
 void HostGame::initSnake()
 {
     //initialize snakes
+    qDebug()<<"Init Snake"<<connectedPlayers;
     vector<RenderObject*>segments;
 
     if(connectedPlayers==1){
@@ -207,12 +208,13 @@ void HostGame::readyRead()
     int playerNum=0;
     for(int i=0;i<socket.size();i++){
         if(pClient==socket.at(i)){
-            playerNum=i+1;
+            playerNum=i;
         }
     }
     qDebug()<<"Player Number "<<playerNum;
     QString data;
     data = pClient->readAll();
+    qDebug()<<data<<gameStarted;
         if(!connected.at(playerNum)){
             connected.at(playerNum)=true;
             qDebug() << "Player" << data << "Has Joined";
@@ -226,19 +228,25 @@ void HostGame::readyRead()
                    sendConnected.append(num);
                    pClient->write(sendConnected); //write the data itself
                    pClient->waitForBytesWritten();
-                   gameStarted=true;
+                  // gameStarted=true;
                }
                else
                {
                    qDebug() <<"Connectedp1"<< pClient->errorString();
                }
 
-               if(playerNum==1){
+               if(playerNum==0){
                    ui->Player1_Name->setText(data);
                }
-               else if(playerNum==2){
+               else if(playerNum==1){
                    ui->Player2_Name->setText(data);
                }
+        }
+        else if(!gameStarted){
+            qDebug()<<data;
+            if(data=="STARTGAME"){
+                this->startGame();
+            }
         }
         else if(gameStarted){
             QString command = data.split(";").first();
@@ -261,9 +269,6 @@ void HostGame::readyRead()
 //                if(ready.at(playerNum)&&p1ready){
 //                    timer->start();
 //                }
-            }
-            else if(data=="STARTGAME"){
-                this->startGame();
             }
         }
 }
@@ -498,7 +503,7 @@ void HostGame::startGame()
 {
     for(int i=0;i<socket.size();i++){
         QTcpSocket* pClient = socket.at(i);
-        if(connected.at(1)&&connected.at(2)){
+        if(connected.at(0)&&connected.at(1)){
             QByteArray sendStarted;
                sendStarted.append("STARTED;");
                qDebug() << pClient->state();
