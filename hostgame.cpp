@@ -151,7 +151,7 @@ void HostGame::p1Disconnected()
     ui->Player1_Name->setText("No Player 1 Connected");
     timer->stop();
     this->resetVars();
-    qDebug() << "Disconnected";
+    qDebug() << "p1Disconnected";
 }
 
 void HostGame::p2Disconnected()
@@ -160,7 +160,7 @@ void HostGame::p2Disconnected()
     ui->Player2_Name->setText("No Player 2 Connected");
     timer->stop();
     this->resetVars();
-    qDebug() << "Disconnected";
+    qDebug() << "p2Disconnected";
 }
 
 void HostGame::p1readyRead()
@@ -370,7 +370,7 @@ void HostGame::Disconnected()
     }
     if(1==playerNum){
         p1connect=false;
-        ui->Player1_Name->setText("No Player 2 Connected");
+        ui->Player1_Name->setText("No Player 1 Connected");
     }
     else if(2==playerNum){
         p2connect=false;
@@ -378,7 +378,7 @@ void HostGame::Disconnected()
     }
     timer->stop();
     this->resetVars();
-    qDebug() << "Disconnected";
+    qDebug() << playerNum<<" Disconnected";
 }
 
 void HostGame::readyRead()
@@ -412,7 +412,7 @@ void HostGame::readyRead()
                }
                else
                {
-                   qDebug() << pClient->errorString();
+                   qDebug() <<"Connectedp1"<< pClient->errorString();
                }
         }
         else if(gameStarted){
@@ -449,7 +449,7 @@ void HostGame::readyRead()
                    }
                    else
                    {
-                       qDebug() << pClient->errorString();
+                       qDebug() << "Pausep1"<<pClient->errorString();
                    }
                    timer->stop();
             }
@@ -475,7 +475,7 @@ void HostGame::readyRead()
                }
                else
                {
-                   qDebug() << pClient->errorString();
+                   qDebug() <<"Connectedp2"<< pClient->errorString();
                }
         }
         else if(gameStarted){
@@ -512,7 +512,7 @@ void HostGame::readyRead()
                    }
                    else
                    {
-                       qDebug() << pClient->errorString();
+                       qDebug() << "Pausep2"<< pClient->errorString();
                    }
                    timer->stop();
             }
@@ -636,25 +636,18 @@ void HostGame::moveSnake()
         timer->stop();
         QByteArray sendData;
            sendData.append("END;NOWINNER");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp1->write(sendData); //write the data itself
-               socketp1->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
-           }
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp2->write(sendData); //write the data itself
-               socketp2->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
+           for(int i=0;i<socket.size();i++){
+               QTcpSocket* pClient = socket.at(i);
+               qDebug() << pClient->state();
+               if(pClient->state() == QAbstractSocket::ConnectedState)
+               {
+                   pClient->write(sendData); //write the data itself
+                   pClient->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() <<"Both Lost "<< pClient->errorString()<<i;
+               }
            }
     }
     else if(player1lost){
@@ -662,25 +655,18 @@ void HostGame::moveSnake()
         timer->stop();
         QByteArray sendData;
            sendData.append("END;P2WIN");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp1->write(sendData); //write the data itself
-               socketp1->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
-           }
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp2->write(sendData); //write the data itself
-               socketp2->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
+           for(int i=0;i<socket.size();i++){
+               QTcpSocket* pClient = socket.at(i);
+               qDebug() << pClient->state();
+               if(pClient->state() == QAbstractSocket::ConnectedState)
+               {
+                   pClient->write(sendData); //write the data itself
+                   pClient->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() <<"P1Lost"<< pClient->errorString()<<i;
+               }
            }
     }
     else if(player2lost){
@@ -688,28 +674,20 @@ void HostGame::moveSnake()
         timer->stop();
         QByteArray sendData;
            sendData.append("END;P1WIN");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp1->write(sendData); //write the data itself
-               socketp1->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
-           }
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               socketp2->write(sendData); //write the data itself
-               socketp2->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
+           for(int i=0;i<socket.size();i++){
+               QTcpSocket* pClient = socket.at(i);
+               qDebug() << pClient->state();
+               if(pClient->state() == QAbstractSocket::ConnectedState)
+               {
+                   pClient->write(sendData); //write the data itself
+                   pClient->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() <<"P2Lost" <<pClient->errorString()<<i;
+               }
            }
     }
-
 }
 
 void HostGame::moveApple()
@@ -800,7 +778,7 @@ void HostGame::startGame()
                }
                else
                {
-                   qDebug() << pClient->errorString();
+                   qDebug() <<"Start Game"<< pClient->errorString();
                }
 
         }
