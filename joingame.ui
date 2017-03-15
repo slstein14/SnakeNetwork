@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>190</y>
+     <x>30</x>
+     <y>170</y>
      <width>113</width>
      <height>32</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>50</y>
+     <x>20</x>
+     <y>10</y>
      <width>111</width>
      <height>20</height>
     </rect>
@@ -42,8 +42,8 @@
   <widget class="QTextEdit" name="HostIP">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>90</y>
+     <x>20</x>
+     <y>40</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -59,9 +59,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>50</y>
-     <width>71</width>
+     <x>20</x>
+     <y>90</y>
+     <width>91</width>
      <height>16</height>
     </rect>
    </property>
@@ -72,9 +72,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QTextEdit" name="PlayerName">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>90</y>
-     <width>91</width>
+     <x>20</x>
+     <y>120</y>
+     <width>131</width>
      <height>41</height>
     </rect>
    </property>
@@ -89,8 +89,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="SnakeColor">
    <property name="geometry">
     <rect>
-     <x>109</x>
-     <y>160</y>
+     <x>20</x>
+     <y>210</y>
      <width>191</width>
      <height>20</height>
     </rect>
@@ -103,13 +103,78 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>230</y>
+     <y>250</y>
      <width>113</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
     <string>Start Game</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>10</y>
+     <width>171</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Players Currently Joined:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P1Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>50</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No Player 1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P2Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>80</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No Player 2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P3Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>110</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No Player 3</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P4Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>140</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>No Player 4</string>
    </property>
   </widget>
  </widget>

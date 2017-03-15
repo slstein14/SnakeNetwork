@@ -34,6 +34,7 @@ public:
     QTcpSocket *socketp1;
     QTcpSocket *socketp2;
     QTcpServer *server;
+    QList<QTcpSocket*>socket;
 
     QTimer *timer;
     RenderObject *player1;
@@ -78,6 +79,8 @@ private slots:
     void p1readyRead();
     void p2readyRead();
     void updateField();
+    void Disconnected();
+    void readyRead();
 
 
 private:

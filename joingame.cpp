@@ -92,12 +92,14 @@ void JoinGame::readyRead()
                 ui->SnakeColor->setText("Your Snake Will Be: Yellow");
                 ui->SnakeColor->setStyleSheet("QLabel { color : Yellow; }");
                 ui->StartButton->setDisabled(false);
+                ui->P1Name->setText(nickname);
             }
             else if(data.split(";").last()=="PLAYER2"){
                 ui->SnakeColor->setText("Your Snake Will Be: Red");
                 ui->SnakeColor->setStyleSheet("QLabel { color : Red; }");
                 ui->StartButton->setDisabled(true);
-            }
+                ui->P2Name->setText(nickname);
+            }// For more players, datalist this and add all players and names to indicate connect/disconnect
         }
         else if(command=="STARTED"){
             qDebug()<<"New Game";
