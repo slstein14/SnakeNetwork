@@ -343,25 +343,18 @@ void HostGame::updateField()
            sendUpdateData.append(temp);
            sendUpdateData.append(";");
            //qDebug() << socket->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
-               socketp1->write(sendUpdateData); //write the data itself
-               socketp1->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() <<"update send fail"<< socketp1->errorString();
-           }
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
-               socketp2->write(sendUpdateData); //write the data itself
-               socketp2->waitForBytesWritten();
-           }
-           else
-           {
-               qDebug() <<"update send fail"<< socketp2->errorString();
+           for(int i=0;i<socket.size();i++){
+               QTcpSocket* pClient = socket.at(i);
+               if(pClient->state() == QAbstractSocket::ConnectedState)
+               {
+                   //qDebug()<<"Matrix 0 0 "<<matrix[0][0]<<"sent data"<<sendData;
+                   pClient->write(sendUpdateData); //write the data itself
+                   pClient->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() <<"update send fail"<< pClient->errorString();
+               }
            }
     }
 }
@@ -790,35 +783,27 @@ void HostGame::resetVars()
 
 void HostGame::startGame()
 {
-    if(p1connect&&p2connect){
-        QByteArray sendStarted1;
-           sendStarted1.append("STARTED;");
-           qDebug() << socketp1->state();
-           if(socketp1->state() == QAbstractSocket::ConnectedState)
-           {
-               sendStarted1.append("PLAYER1");
-               socketp1->write(sendStarted1); //write the data itself
-               socketp1->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp1->errorString();
-           }
-           QByteArray sendStarted2;
-              sendStarted2.append("STARTED;");
-           qDebug() << socketp2->state();
-           if(socketp2->state() == QAbstractSocket::ConnectedState)
-           {
-               sendStarted2.append("PLAYER2");
-               socketp2->write(sendStarted2); //write the data itself
-               socketp2->waitForBytesWritten();
-               gameStarted=true;
-           }
-           else
-           {
-               qDebug() << socketp2->errorString();
-           }
+    for(int i=0;i<socket.size();i++){
+        QTcpSocket* pClient = socket.at(i);
+        if(p1connect&&p2connect){
+            QByteArray sendStarted;
+               sendStarted.append("STARTED;");
+               qDebug() << pClient->state();
+               if(pClient->state() == QAbstractSocket::ConnectedState)
+               {
+                   sendStarted.append("PLAYER");
+                   QString num=QString::number(i+1);
+                   sendStarted.append(num);
+                   pClient->write(sendStarted); //write the data itself
+                   pClient->waitForBytesWritten();
+                   gameStarted=true;
+               }
+               else
+               {
+                   qDebug() << pClient->errorString();
+               }
+
+        }
     }
 }
 
