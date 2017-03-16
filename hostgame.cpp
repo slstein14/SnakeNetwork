@@ -228,10 +228,10 @@ void HostGame::readyRead()
 
            playerName.push_back(data);
            QByteArray sendPList;
-           sendPList.append("PLAYERLIST;");
+           sendPList.append("PLAYERLIST");
            for(int i=0;i<playerName.size();i++){
-               sendPList.append(playerName.at(i));
                sendPList.append(";");
+               sendPList.append(playerName.at(i));
            }
            for(int i=0;i<socket.size();i++){
                qDebug() << socket.at(i)->state();
@@ -501,6 +501,7 @@ void HostGame::resetVars()
     for(int i=0;i<snakes.size();i++){
         snakes.at(i).clear();
     }
+    playerName.clear();
     snakes.clear();
     connected.clear();
     ready.clear();
