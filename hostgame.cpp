@@ -408,8 +408,13 @@ void HostGame::moveSnake()
         matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]=1;
     }
 
-    if(playerlost.at(0)&&playerlost.at(1)){
-        //Stops all objects from moving in the background
+    int losers=0;
+    for(int i=0;i<snakes.size();i++){
+        if(playerlost.at(i)){
+            losers++;
+        }
+    }
+    if(losers>snakes.size()-1){
         timer->stop();
         QByteArray sendData;
            sendData.append("END;NOWINNER");
@@ -427,24 +432,35 @@ void HostGame::moveSnake()
                }
            }
     }
+    else if(losers==snakes.size()-1){
+        for(int i=0;i<snakes.size();i++){
+            if(!playerlost.at(i)){
+                //Stops all objects from moving in the background
+                timer->stop();
+                QByteArray sendData;
+                   sendData.append("END;");
+                   QString winner=QString::number(i+1);
+                   sendData.append(winner);
+                   for(int i=0;i<socket.size();i++){
+                       QTcpSocket* pClient = socket.at(i);
+                       qDebug() << pClient->state();
+                       if(pClient->state() == QAbstractSocket::ConnectedState)
+                       {
+                           pClient->write(sendData); //write the data itself
+                           pClient->waitForBytesWritten();
+                       }
+                       else
+                       {
+                           qDebug() <<"P1Lost"<< pClient->errorString()<<i;
+                       }
+                   }
+
+            }
+        }
+    }
+
     else if(playerlost.at(0)){
-        //Stops all objects from moving in the background
-        timer->stop();
-        QByteArray sendData;
-           sendData.append("END;P2WIN");
-           for(int i=0;i<socket.size();i++){
-               QTcpSocket* pClient = socket.at(i);
-               qDebug() << pClient->state();
-               if(pClient->state() == QAbstractSocket::ConnectedState)
-               {
-                   pClient->write(sendData); //write the data itself
-                   pClient->waitForBytesWritten();
-               }
-               else
-               {
-                   qDebug() <<"P1Lost"<< pClient->errorString()<<i;
-               }
-           }
+
     }
     else if(playerlost.at(1)){
         //Stops all objects from moving in the background

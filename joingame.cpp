@@ -170,12 +170,6 @@ void JoinGame::readyRead()
         qDebug()<<data;
         int pnum=data.split(";").last().toInt();
         game2->setPlayer(pnum);
-//        if(data.split(";").last()=="PLAYER1"){
-//            game2->setPlayer(1);
-//        }
-//        else if(data.split(";").last()=="PLAYER2"){
-//            game2->setPlayer(2);
-//        }
         qDebug()<<"Send READY";
         QByteArray readyData;
         QString dir=QString::number(game2->getDirection());
@@ -253,11 +247,9 @@ void JoinGame::readyRead()
         if(data.split(";").last()=="NOWINNER"){
             game2->gameOver(0);
         }
-        else if(data.split(";").last()=="P1WIN"){
-            game2->gameOver(1);
-        }
-        else if(data.split(";").last()=="P2WIN"){
-            game2->gameOver(2);
+        else{
+            int winner=data.split(";").last().toInt();
+            game2->gameOver(winner);
         }
         socket->disconnectFromHost();
     }

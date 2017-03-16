@@ -163,27 +163,17 @@ void Network2Player::gameOver(int winner)
         //Closes game window
         this->close();
     }
-    else if(winner==2){
+    else{
         //Displays Game Over Message
         QMessageBox mbox;
-        mbox.setText("Game Over. Player 2 Wins!");
+        QString message="Game Over. Player "+QString::number(winner)+" Wins!";
+        mbox.setText(message);
         mbox.exec();
         //Checks if a new HighScore has been reached, and sets it
         //scoreSet->setHighScores(difficulty,score);
         //Closes game window
         this->close();
     }
-    else if(winner==1){
-        //Displays Game Over Message
-        QMessageBox mbox;
-        mbox.setText("Game Over. Player 1 Wins!");
-        mbox.exec();
-        //Checks if a new HighScore has been reached, and sets it
-        //scoreSet->setHighScores(difficulty,score);
-        //Closes game window
-        this->close();
-    }
-
 }
 
 int Network2Player::getDirection()
