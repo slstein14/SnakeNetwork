@@ -182,24 +182,14 @@ void HostGame::initSnake()
 
 void HostGame::Disconnected()
 {
-    QTcpSocket* pClient = static_cast<QTcpSocket*>(QObject::sender());
-    int playerNum=0;
     for(int i=0;i<socket.size();i++){
-        if(pClient==socket.at(i)){
-            playerNum=i+1;
-            socket.at(i)->disconnectFromHost();
-        }
+        socket.at(i)->disconnectFromHost();
     }
-    //connected.at(playerNum-1)=false;
-    //if(1==playerNum){
-        ui->Player1_Name->setText("No Player 1 Connected");
-    //}
-    //else if(2==playerNum){
-        ui->Player2_Name->setText("No Player 2 Connected");
-    //}
+    ui->Player1_Name->setText("No Player 1 Connected");
+    ui->Player2_Name->setText("No Player 2 Connected");
     timer->stop();
     this->resetVars();
-    qDebug() << playerNum<<" Disconnected";
+    qDebug() <<" Disconnected";
 }
 
 void HostGame::readyRead()
@@ -460,16 +450,13 @@ void HostGame::moveApple()
 {
     //Removes the old apple location
     matrix[apple->getYCoord()][apple->getXCoord()]=0;
-
     int x=0;
     int y=0;
-
     //Checks until it finds a location that isn't a wall or snake (empty)
     while(0!=matrix[y][x]){
         x = rand()%64;
         y = rand()%48;
     }
-
     //Sets the new apple
     apple->setXCoord(x);
     apple->setYCoord(y);
@@ -491,22 +478,21 @@ void HostGame::resetVars()
         }
     }
 
-    //initialize snake
-   // for(int i=0;i<snakes.size();i++){
-        snakes.clear();
-        connected.clear();
-        ready.clear();
-        direction.clear();
-        newDirection.clear();
-        score.clear();
-        playerlost.clear();
-   // }
+    for(int i=0;i<snakes.size();i++){
+        snakes.at(i).clear();
+    }
+    snakes.clear();
+    connected.clear();
+    ready.clear();
+    direction.clear();
+    newDirection.clear();
+    score.clear();
+    playerlost.clear();
     socket.clear();
     connectedPlayers=0;
     gameStarted=false;
-//    for(int i=0;i<connectedPlayers;i++){
-//        initSnake();
-//    }
+    appleEaten=false;
+
     //initialize apple randomly
     this->moveApple();
 }
