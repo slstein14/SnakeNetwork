@@ -22,7 +22,6 @@ GameWindow::GameWindow(QWidget *parent) :
     //Initialize window
     QPixmap bkgnd("images/background.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-//        qDebug()<<this->size();//640x480
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);

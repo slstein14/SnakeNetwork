@@ -54,14 +54,13 @@ void MainWindow::on_actionQuit_triggered()
 
 void MainWindow::on_actionHigh_Score_triggered()
 {//Creates a high score object if none exists, then displays it
-    if(hScore==NULL)
-    {
+    if(hScore==NULL){
         hScore = new HighScores();
-    }else{
+    }
+    else{
         delete hScore;
         hScore = new HighScores();
     }
-
     hScore->show();
 }
 
@@ -75,65 +74,65 @@ void MainWindow::on_actionEasy_triggered()
         hScore = new HighScores();
     }
 
-    if(game == NULL)
-        {
-            game = new GameWindow();
-            game->setDifficulty(1);
-            game->sendHighScoreObject(hScore);
-        }else{
-            delete game;
-            game = new GameWindow();
-            game->setDifficulty(1);
-            game->sendHighScoreObject(hScore);
-        }
-        game->show();
+    if(game == NULL){
+        game = new GameWindow();
+        game->setDifficulty(1);
+        game->sendHighScoreObject(hScore);
+    }
+    else{
+        delete game;
+        game = new GameWindow();
+        game->setDifficulty(1);
+        game->sendHighScoreObject(hScore);
+    }
+    game->show();
 }
 
 void MainWindow::on_actionMedium_triggered()
 {//Starts game on medium
-    if(hScore==NULL)
-    {
+    if(hScore==NULL){
         hScore = new HighScores();
-    }else{
+    }
+    else{
         delete hScore;
         hScore = new HighScores();
     }
 
-    if(game == NULL)
-        {
-            game = new GameWindow();
-            game->setDifficulty(2);
-            game->sendHighScoreObject(hScore);
-        }else{
-            delete game;
-            game = new GameWindow();
-            game->setDifficulty(2);
-            game->sendHighScoreObject(hScore);
-        }
-        game->show();
+    if(game == NULL){
+        game = new GameWindow();
+        game->setDifficulty(2);
+        game->sendHighScoreObject(hScore);
+    }
+    else{
+        delete game;
+        game = new GameWindow();
+        game->setDifficulty(2);
+        game->sendHighScoreObject(hScore);
+    }
+    game->show();
 }
 
 void MainWindow::on_actionHard_triggered()
 {//Starts game on hard
-    if(hScore==NULL)
-    {
+    if(hScore==NULL){
         hScore = new HighScores();
-    }else{
+    }
+    else{
         delete hScore;
         hScore = new HighScores();
     }
 
-    if(game == NULL)
-        {
-            game = new GameWindow();
-            game->setDifficulty(3);
-            game->sendHighScoreObject(hScore);
-        }else{
-            delete game;
-            game = new GameWindow();
-            game->setDifficulty(3);
-            game->sendHighScoreObject(hScore);
-        }
+    if(game == NULL){
+        game = new GameWindow();
+        game->setDifficulty(3);
+        game->sendHighScoreObject(hScore);
+    }
+    else{
+        delete game;
+        game = new GameWindow();
+        game->setDifficulty(3);
+        game->sendHighScoreObject(hScore);
+    }
         game->show();
 }
 
@@ -155,26 +154,14 @@ void MainWindow::on_actionContact_Us_triggered()
 
 void MainWindow::on_action2_Player_triggered()
 {
-    if(hScore==NULL)
-    {
-        hScore = new HighScores();
-    }else{
-        delete hScore;
-        hScore = new HighScores();
+    if(game2 == NULL){
+        game2 = new GameWindow2Player();
     }
-
-    if(game2 == NULL)
-        {
-            game2 = new GameWindow2Player();
-            game2->setDifficulty(1);
-            game2->sendHighScoreObject(hScore);
-        }else{
-            delete game2;
-            game2 = new GameWindow2Player();
-            game2->setDifficulty(1);
-            game2->sendHighScoreObject(hScore);
-        }
-        game2->show();
+    else{
+        delete game2;
+        game2 = new GameWindow2Player();
+    }
+    game2->show();
 }
 
 void MainWindow::on_action2_Player_Host_triggered()

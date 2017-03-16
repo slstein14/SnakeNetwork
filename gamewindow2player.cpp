@@ -22,7 +22,6 @@ GameWindow2Player::GameWindow2Player(QWidget *parent) :
     //Initialize window
     QPixmap bkgnd("images/background.jpg");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-//        qDebug()<<this->size();//640x480
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);
@@ -120,8 +119,6 @@ void GameWindow2Player::paintEvent(QPaintEvent *e)
 
 void GameWindow2Player::keyPressEvent(QKeyEvent *evt)
 {//Detects what key the user has pressed
-    qDebug()<<"Key Event";
-
     switch(evt->key()){
     case Qt::Key_Escape:
     case Qt::Key_P:
@@ -132,7 +129,6 @@ void GameWindow2Player::keyPressEvent(QKeyEvent *evt)
     }
 
     if(false==newDirection1){
-        qDebug()<<"Key 1 Event?";
         switch(evt->key())
             {//Sets the snake based on the arrow keys, and pauses based on P and Esc
             case Qt::Key_Right:
@@ -164,7 +160,6 @@ void GameWindow2Player::keyPressEvent(QKeyEvent *evt)
         }
     }
     if(false==newDirection2){
-        qDebug()<<"Key 2 Event";
         switch(evt->key())
             {//Sets the snake based on the arrow keys, and pauses based on P and Esc
             case Qt::Key_D:
@@ -367,32 +362,6 @@ void GameWindow2Player::moveApple()
     //Indicates a new apple has appeared
     appleEatenBy2=false;
     appleEatenBy1=false;
-}
-
-void GameWindow2Player::setDifficulty(int difficulty)
-{
-    //Sets the gmae difficulty (Basically the speed of the snake)
-    this->difficulty=difficulty;
-    int timeout;
-    if(1==difficulty){
-        timeout=100;
-    }
-    else if(2==difficulty){
-        timeout=66;
-    }
-    else{
-        timeout=33;
-    }
-    timer->setInterval(timeout);
-}
-
-void GameWindow2Player::sendHighScoreObject(HighScores *scoreSet)
-{
-    //This initializes the high scores object
-    //Not sure exactly why, but something about creating a new one overlayed
-    //the high score text onto the game window
-    //So we send one from the main window instead
-    this->scoreSet=scoreSet;
 }
 
 void GameWindow2Player::pauseMenu()

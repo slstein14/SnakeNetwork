@@ -31,7 +31,6 @@ private:
     int matrix[48][64];
     bool appleEatenBy1;
     bool appleEatenBy2;
-    int difficulty;
     int score1;
     int score2;
     bool paused;
@@ -51,11 +50,8 @@ public:
     GameWindow2Player(QWidget *parent = 0);
     void paintEvent(QPaintEvent *e);
     void keyPressEvent(QKeyEvent *evt);
-//    void keyReleaseEvent(QKeyEvent *evt);
     void moveSnake();
     void moveApple();
-    void setDifficulty(int difficulty);
-    void sendHighScoreObject(HighScores* scoreSet);
     void pauseMenu();
 
 

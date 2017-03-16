@@ -4,14 +4,10 @@
 #include <QTcpSocket>
 #include <QTcpServer>
 #include "renderobject.h"
-#include <QPixmap>
 #include <QTimer>
 #include <QKeyEvent>
-#include <QMessageBox>
 #include <QLabel>
-#include <QPushButton>
 #include <vector>
-#include <QGenericMatrix>
 #include <time.h>
 using namespace std;
 
@@ -39,15 +35,10 @@ public:
     vector<vector<RenderObject*>>snakes;
     int matrix[48][64];
     int difficulty;
-    QMessageBox *msg;
-    QMessageBox *pbox;
-    QPixmap *wallImage;
-    QPixmap *appleImage;
     bool gameStarted;
     bool appleEaten;
 
     vector<QString> playerName;
-    vector<QPixmap*> snakeImage;
     vector<bool> connected;
     vector<bool> ready;
     vector<bool> newDirection;

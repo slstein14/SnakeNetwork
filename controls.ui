@@ -82,7 +82,7 @@
       <item>
        <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>Pause</string>
+         <string>Pause (Local Only)</string>
         </property>
        </widget>
       </item>

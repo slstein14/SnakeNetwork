@@ -19,10 +19,6 @@ HostGame::HostGame(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(updateField()));
     //timer->start();
 
-    //initialize image files
-    wallImage = new QPixmap("Images/wall.png");
-    appleImage = new QPixmap("Images/apple.png");
-
     //initialize map borders and matrix
     //Note that the matrix assumes a 640x480 window
     //It takes 10 pixel squares and interprets them as one 'unit'
@@ -38,7 +34,6 @@ HostGame::HostGame(QWidget *parent) :
     //initialize apple randomly
     srand(time(0));
     apple = new RenderObject(this);
-    apple->setImage(appleImage);
     this->moveApple();
     appleEaten=false;
 
@@ -79,9 +74,6 @@ void HostGame::initSnake()
             RenderObject *player1 = new RenderObject(this);
             player1->setXCoord(i);
             player1->setYCoord(2);
-            QPixmap *snakeImage1 = new QPixmap("Images/snakeSegment.png");
-            snakeImage.push_back(snakeImage1);
-            player1->setImage(snakeImage1);
             segments.push_back(player1);
             matrix[i][2]=1;
         }
@@ -91,9 +83,6 @@ void HostGame::initSnake()
             RenderObject *player2 = new RenderObject(this);
             player2->setXCoord(i);
             player2->setYCoord(45);
-            QPixmap *snakeImage2 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage2);
-            player2->setImage(snakeImage2);
             segments.push_back(player2);
             matrix[i][45]=4;
         }
@@ -103,9 +92,6 @@ void HostGame::initSnake()
             RenderObject *player3 = new RenderObject(this);
             player3->setXCoord(i);
             player3->setYCoord(45);
-            QPixmap *snakeImage3 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage3);
-            player3->setImage(snakeImage3);
             segments.push_back(player3);
             matrix[i][45]=1;
         }
@@ -115,9 +101,6 @@ void HostGame::initSnake()
             RenderObject *player4 = new RenderObject(this);
             player4->setXCoord(i);
             player4->setYCoord(2);
-            QPixmap *snakeImage4 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage4);
-            player4->setImage(snakeImage4);
             segments.push_back(player4);
             matrix[i][2]=4;
         }
@@ -127,9 +110,6 @@ void HostGame::initSnake()
             RenderObject *player5 = new RenderObject(this);
             player5->setXCoord(i);
             player5->setYCoord(16);
-            QPixmap *snakeImage5 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage5);
-            player5->setImage(snakeImage5);
             segments.push_back(player5);
             matrix[i][16]=1;
         }
@@ -139,9 +119,6 @@ void HostGame::initSnake()
             RenderObject *player6 = new RenderObject(this);
             player6->setXCoord(i);
             player6->setYCoord(31);
-            QPixmap *snakeImage6 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage6);
-            player6->setImage(snakeImage6);
             segments.push_back(player6);
             matrix[i][31]=4;
         }
@@ -151,9 +128,6 @@ void HostGame::initSnake()
             RenderObject *player7 = new RenderObject(this);
             player7->setXCoord(i);
             player7->setYCoord(31);
-            QPixmap *snakeImage7 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage7);
-            player7->setImage(snakeImage7);
             segments.push_back(player7);
             matrix[i][31]=1;
         }
@@ -163,9 +137,6 @@ void HostGame::initSnake()
             RenderObject *player8 = new RenderObject(this);
             player8->setXCoord(i);
             player8->setYCoord(16);
-            QPixmap *snakeImage8 = new QPixmap("Images/redsnake.png");
-            snakeImage.push_back(snakeImage8);
-            player8->setImage(snakeImage8);
             segments.push_back(player8);
             matrix[i][16]=4;
         }
@@ -388,7 +359,6 @@ void HostGame::moveSnake()
             RenderObject *newseg = new RenderObject(this);
             newseg->setXCoord(backX1);
             newseg->setYCoord(backY1);
-            newseg->setImage(snakeImage.at(i));
             moveSnake.push_back(newseg);
             //Increases the player score
             score.at(i)++;
@@ -399,7 +369,7 @@ void HostGame::moveSnake()
         //Checks if the player has collided with a wall
         if((3==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])||(1==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])){
             //Stops all objects from moving in the background
-            qDebug()<<"P1 Collision Object "<<matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]<<" At X "<<(*(moveSnake.at(0))).getXCoord()<<" Y "<<(*(moveSnake.at(0))).getYCoord();
+            qDebug()<<"Player "<<i<< " Collision Object "<<matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]<<" At X "<<(*(moveSnake.at(0))).getXCoord()<<" Y "<<(*(moveSnake.at(0))).getYCoord();
             qDebug()<<"Direction "<<direction.at(i);
             playerlost.at(i)=true;
         }
@@ -454,32 +424,8 @@ void HostGame::moveSnake()
                            qDebug() <<"P1Lost"<< pClient->errorString()<<i;
                        }
                    }
-
             }
         }
-    }
-
-    else if(playerlost.at(0)){
-
-    }
-    else if(playerlost.at(1)){
-        //Stops all objects from moving in the background
-        timer->stop();
-        QByteArray sendData;
-           sendData.append("END;P1WIN");
-           for(int i=0;i<socket.size();i++){
-               QTcpSocket* pClient = socket.at(i);
-               qDebug() << pClient->state();
-               if(pClient->state() == QAbstractSocket::ConnectedState)
-               {
-                   pClient->write(sendData); //write the data itself
-                   pClient->waitForBytesWritten();
-               }
-               else
-               {
-                   qDebug() <<"P2Lost" <<pClient->errorString()<<i;
-               }
-           }
     }
 }
 
@@ -555,7 +501,6 @@ void HostGame::startGame()
                {
                    qDebug() <<"Start Game"<< pClient->errorString();
                }
-
         }
     }
 }
