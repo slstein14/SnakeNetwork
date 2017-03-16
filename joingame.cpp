@@ -76,6 +76,12 @@ void JoinGame::Disconnected()
     ui->SnakeColor->setStyleSheet("QLabel { color : Black; }");
     ui->P1Name->setText("No Player 1");
     ui->P2Name->setText("No Player 2");
+    ui->P3Name->setText("");
+    ui->P4Name->setText("");
+    ui->P5Name->setText("");
+    ui->P6Name->setText("");
+    ui->P7Name->setText("");
+    ui->P8Name->setText("");
     qDebug() << "Disconnected";
 
 }
@@ -96,7 +102,31 @@ void JoinGame::readyRead()
         else if(data.split(";").last()=="PLAYER2"){
             ui->SnakeColor->setText("Your Snake Will Be: Red");
             ui->SnakeColor->setStyleSheet("QLabel { color : Red; }");
-        }// For more players, datalist this and add all players and names to indicate connect/disconnect
+        }
+        else if(data.split(";").last()=="PLAYER3"){
+            ui->SnakeColor->setText("Your Snake Will Be: Blue");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Blue; }");
+        }
+        else if(data.split(";").last()=="PLAYER4"){
+            ui->SnakeColor->setText("Your Snake Will Be: Orange");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Orange; }");
+        }
+        else if(data.split(";").last()=="PLAYER5"){
+            ui->SnakeColor->setText("Your Snake Will Be: Black");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Black; }");
+        }
+        else if(data.split(";").last()=="PLAYER6"){
+            ui->SnakeColor->setText("Your Snake Will Be: Pink");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Pink; }");
+        }
+        else if(data.split(";").last()=="PLAYER7"){
+            ui->SnakeColor->setText("Your Snake Will Be: Brown");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Brown; }");
+        }
+        else if(data.split(";").last()=="PLAYER8"){
+            ui->SnakeColor->setText("Your Snake Will Be: Light Blue");
+            ui->SnakeColor->setStyleSheet("QLabel { color : Cyan; }");
+        }
     }
     else if(command=="PLAYERLIST"){
         QStringList pieces = data.split( ";" );
@@ -106,6 +136,24 @@ void JoinGame::readyRead()
             }
             else if(i==2){
                 ui->P2Name->setText(pieces.at(i));
+            }
+            else if(i==3){
+                ui->P3Name->setText(pieces.at(i));
+            }
+            else if(i==4){
+                ui->P4Name->setText(pieces.at(i));
+            }
+            else if(i==5){
+                ui->P5Name->setText(pieces.at(i));
+            }
+            else if(i==6){
+                ui->P6Name->setText(pieces.at(i));
+            }
+            else if(i==7){
+                ui->P7Name->setText(pieces.at(i));
+            }
+            else if(i==8){
+                ui->P8Name->setText(pieces.at(i));
             }
         }
     }
@@ -120,12 +168,14 @@ void JoinGame::readyRead()
         }
         game2->show();
         qDebug()<<data;
-        if(data.split(";").last()=="PLAYER1"){
-            game2->setPlayer(1);
-        }
-        else if(data.split(";").last()=="PLAYER2"){
-            game2->setPlayer(2);
-        }
+        int pnum=data.split(";").last().toInt();
+        game2->setPlayer(pnum);
+//        if(data.split(";").last()=="PLAYER1"){
+//            game2->setPlayer(1);
+//        }
+//        else if(data.split(";").last()=="PLAYER2"){
+//            game2->setPlayer(2);
+//        }
         qDebug()<<"Send READY";
         QByteArray readyData;
         QString dir=QString::number(game2->getDirection());

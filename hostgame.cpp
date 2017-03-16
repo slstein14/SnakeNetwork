@@ -528,7 +528,6 @@ void HostGame::startGame()
                qDebug() << pClient->state();
                if(pClient->state() == QAbstractSocket::ConnectedState)
                {
-                   sendStarted.append("PLAYER");
                    QString num=QString::number(i+1);
                    sendStarted.append(num);
                    pClient->write(sendStarted); //write the data itself

@@ -129,7 +129,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>50</y>
+     <y>30</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -142,7 +142,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>80</y>
+     <y>50</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -155,26 +155,78 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>110</y>
+     <y>70</y>
      <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>No Player 3</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="P4Name">
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>140</y>
+     <y>90</y>
      <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>No Player 4</string>
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P5Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>110</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P6Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>130</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P7Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>150</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="P8Name">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>170</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

@@ -179,13 +179,13 @@ void Network2Player::resetObjects()
 
 void Network2Player::setPlayer(int player)
 {
-    if(player==1){
+    if((player%2)==1){
         direction=2;
-        qDebug()<<"Player1";
+        qDebug()<<"Player "<<player;
     }
-    else if(player==2){
+    else if((player%2)==0){
         direction=1;
-        qDebug()<<"Player2";
+        qDebug()<<"Player "<<player;
     }
     else{
         qDebug()<<"Player out of range";
