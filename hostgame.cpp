@@ -215,7 +215,7 @@ void HostGame::readyRead()
            if(pClient->state() == QAbstractSocket::ConnectedState)
            {
                sendConnected.append("PLAYER");
-               QString num = QString::number(playerNum);
+               QString num = QString::number(playerNum+1);
                sendConnected.append(num);
                pClient->write(sendConnected); //write the data itself
                pClient->waitForBytesWritten();
@@ -223,7 +223,27 @@ void HostGame::readyRead()
            }
            else
            {
-               qDebug() <<"Connectedp1"<< pClient->errorString();
+               qDebug() <<"Connected"<< pClient->errorString();
+           }
+
+           playerName.push_back(data);
+           QByteArray sendPList;
+           sendPList.append("PLAYERLIST;");
+           for(int i=0;i<playerName.size();i++){
+               sendPList.append(playerName.at(i));
+               sendPList.append(";");
+           }
+           for(int i=0;i<socket.size();i++){
+               qDebug() << socket.at(i)->state();
+               if(socket.at(i)->state() == QAbstractSocket::ConnectedState)
+               {
+                   socket.at(i)->write(sendPList); //write the data itself
+                   socket.at(i)->waitForBytesWritten();
+               }
+               else
+               {
+                   qDebug() <<"Connected"<< socket.at(i)->errorString();
+               }
            }
 
            if(playerNum==0){

@@ -46,7 +46,7 @@ public:
     bool gameStarted;
     bool appleEaten;
 
-
+    vector<QString> playerName;
     vector<QPixmap*> snakeImage;
     vector<bool> connected;
     vector<bool> ready;

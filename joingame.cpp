@@ -14,6 +14,7 @@ JoinGame::JoinGame(QWidget *parent) :
     socket = new QTcpSocket(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
+    ui->StartButton->setDisabled(true);
 }
 
 JoinGame::~JoinGame()
@@ -70,6 +71,7 @@ void JoinGame::newConnection()
 
 void JoinGame::Disconnected()
 {
+    ui->StartButton->setDisabled(true);
     ui->SnakeColor->setText("Your Snake Will Be: ");
     ui->SnakeColor->setStyleSheet("QLabel { color : Black; }");
     ui->P1Name->setText("No Player 1");
@@ -83,20 +85,29 @@ void JoinGame::readyRead()
     qDebug()<<"readyRead";
     QString data;
     data = socket->readAll();
+    qDebug()<<data;
     QString command = data.split(";").first();
     if(command=="CONNECTED"){
         if(data.split(";").last()=="PLAYER1"){
             ui->SnakeColor->setText("Your Snake Will Be: Yellow");
             ui->SnakeColor->setStyleSheet("QLabel { color : Yellow; }");
             ui->StartButton->setDisabled(false);
-            ui->P1Name->setText(nickname);
         }
         else if(data.split(";").last()=="PLAYER2"){
             ui->SnakeColor->setText("Your Snake Will Be: Red");
             ui->SnakeColor->setStyleSheet("QLabel { color : Red; }");
-            ui->StartButton->setDisabled(true);
-            ui->P2Name->setText(nickname);
         }// For more players, datalist this and add all players and names to indicate connect/disconnect
+    }
+    else if(command=="PLAYERLIST"){
+        QStringList pieces = data.split( ";" );
+        for(int i=0;i<pieces.length();i++){
+            if(i==1){
+                ui->P1Name->setText(pieces.at(i));
+            }
+            else if(i==2){
+                ui->P2Name->setText(pieces.at(i));
+            }
+        }
     }
     else if(command=="STARTED"){
         qDebug()<<"New Game";
