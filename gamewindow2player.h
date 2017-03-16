@@ -11,7 +11,6 @@
 #include <vector>
 #include <QGenericMatrix>
 #include <vector>
-#include "highscores.h"
 using namespace std;
 
 
@@ -24,7 +23,6 @@ private:
     RenderObject *player2;
     RenderObject* wall;
     RenderObject* apple;
-    HighScores* scoreSet;
     vector<RenderObject*>walls;
     vector<RenderObject*>segments1;
     vector<RenderObject*>segments2;
