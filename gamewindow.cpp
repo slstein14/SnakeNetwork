@@ -41,7 +41,7 @@ GameWindow::GameWindow(QWidget *parent) :
     timer->start();
 
     //initialize image files
-    snakeImage = new QPixmap("Images/snakeSegment.png");
+    snakeImage = new QPixmap("Images/SnakePlayer1.png");
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 

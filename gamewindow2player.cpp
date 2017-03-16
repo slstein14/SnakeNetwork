@@ -41,8 +41,8 @@ GameWindow2Player::GameWindow2Player(QWidget *parent) :
     timer->start();
 
     //initialize image files
-    snakeImage1 = new QPixmap("Images/snakeSegment.png");
-    snakeImage2 = new QPixmap("Images/redsnake.png");
+    snakeImage1 = new QPixmap("Images/SnakePlayer1.png");
+    snakeImage2 = new QPixmap("Images/SnakePlayer2.png");
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 
