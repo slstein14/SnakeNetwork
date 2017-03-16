@@ -187,15 +187,16 @@ void HostGame::Disconnected()
     for(int i=0;i<socket.size();i++){
         if(pClient==socket.at(i)){
             playerNum=i+1;
+            socket.at(i)->disconnectFromHost();
         }
     }
-    connected.at(playerNum-1)=false;
-    if(1==playerNum){
+    //connected.at(playerNum-1)=false;
+    //if(1==playerNum){
         ui->Player1_Name->setText("No Player 1 Connected");
-    }
-    else if(2==playerNum){
+    //}
+    //else if(2==playerNum){
         ui->Player2_Name->setText("No Player 2 Connected");
-    }
+    //}
     timer->stop();
     this->resetVars();
     qDebug() << playerNum<<" Disconnected";
@@ -491,18 +492,21 @@ void HostGame::resetVars()
     }
 
     //initialize snake
-    for(int i=0;i<snakes.size();i++){
-        snakes.at(i).clear();
+   // for(int i=0;i<snakes.size();i++){
+        snakes.clear();
         connected.clear();
         ready.clear();
         direction.clear();
         newDirection.clear();
         score.clear();
         playerlost.clear();
-    }
-    for(int i=0;i<connectedPlayers;i++){
-        initSnake();
-    }
+   // }
+    socket.clear();
+    connectedPlayers=0;
+    gameStarted=false;
+//    for(int i=0;i<connectedPlayers;i++){
+//        initSnake();
+//    }
     //initialize apple randomly
     this->moveApple();
 }
