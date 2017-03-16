@@ -19,6 +19,12 @@ class Network2Player: public QWidget
 private:
     RenderObject *player1;
     RenderObject *player2;
+    RenderObject *player3;
+    RenderObject *player4;
+    RenderObject *player5;
+    RenderObject *player6;
+    RenderObject *player7;
+    RenderObject *player8;
     RenderObject* wall;
     RenderObject* apple;
     QTimer *timer;
@@ -26,11 +32,23 @@ private:
     vector<RenderObject*>walls;
     vector<RenderObject*>segments1;
     vector<RenderObject*>segments2;
+    vector<RenderObject*>segments3;
+    vector<RenderObject*>segments4;
+    vector<RenderObject*>segments5;
+    vector<RenderObject*>segments6;
+    vector<RenderObject*>segments7;
+    vector<RenderObject*>segments8;
     int matrix[48][64];
     int direction;
     QMessageBox *msg;
     QPixmap *snakeImage1;
     QPixmap *snakeImage2;
+    QPixmap *snakeImage3;
+    QPixmap *snakeImage4;
+    QPixmap *snakeImage5;
+    QPixmap *snakeImage6;
+    QPixmap *snakeImage7;
+    QPixmap *snakeImage8;
     QPixmap *wallImage;
     QPixmap *appleImage;
 

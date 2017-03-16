@@ -35,6 +35,12 @@ Network2Player::Network2Player(QWidget *parent) :
     //initialize image files
     snakeImage1 = new QPixmap("Images/snakeSegment.png");
     snakeImage2 = new QPixmap("Images/RedSnake.png");
+    snakeImage3 = new QPixmap("Images/snakeSegment.png");
+    snakeImage4 = new QPixmap("Images/RedSnake.png");
+    snakeImage5 = new QPixmap("Images/snakeSegment.png");
+    snakeImage6 = new QPixmap("Images/RedSnake.png");
+    snakeImage7 = new QPixmap("Images/snakeSegment.png");
+    snakeImage8 = new QPixmap("Images/RedSnake.png");
     wallImage = new QPixmap("Images/wall.png");
     appleImage = new QPixmap("Images/apple.png");
 
@@ -59,6 +65,24 @@ Network2Player::Network2Player(QWidget *parent) :
     player2 = new RenderObject(this);
     player2->setImage(snakeImage2);
 
+    player3 = new RenderObject(this);
+    player3->setImage(snakeImage3);
+
+    player4 = new RenderObject(this);
+    player4->setImage(snakeImage4);
+
+    player5 = new RenderObject(this);
+    player5->setImage(snakeImage5);
+
+    player6 = new RenderObject(this);
+    player6->setImage(snakeImage6);
+
+    player7 = new RenderObject(this);
+    player7->setImage(snakeImage7);
+
+    player8 = new RenderObject(this);
+    player8->setImage(snakeImage8);
+
     //initialize apple
     apple = new RenderObject(this);
     apple->setImage(appleImage);
@@ -73,6 +97,24 @@ void Network2Player::paintEvent(QPaintEvent *e)
     }
     for(int i=0;i<segments2.size();i++){//Renders each segment of the snake 2
         (*(segments2.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments3.size();i++){//Renders each segment of the snake 2
+        (*(segments3.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments4.size();i++){//Renders each segment of the snake 2
+        (*(segments4.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments5.size();i++){//Renders each segment of the snake 2
+        (*(segments5.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments6.size();i++){//Renders each segment of the snake 2
+        (*(segments6.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments7.size();i++){//Renders each segment of the snake 2
+        (*(segments7.at(i))).drawObject(painter);
+    }
+    for(int i=0;i<segments8.size();i++){//Renders each segment of the snake 2
+        (*(segments8.at(i))).drawObject(painter);
     }
 
     for(int i=0;i<walls.size();i++){//Renders each wall segment
@@ -169,12 +211,60 @@ void Network2Player::setPart(int i, int x, int y)
         player2->setImage(snakeImage2);
         segments2.push_back(player2);
     }
+    else if(i==3){
+        RenderObject *player3=new RenderObject(this);
+        player3->setXCoord(x);
+        player3->setYCoord(y);
+        player3->setImage(snakeImage3);
+        segments3.push_back(player3);
+    }
+    else if(i==4){
+        RenderObject *player4=new RenderObject(this);
+        player4->setXCoord(x);
+        player4->setYCoord(y);
+        player4->setImage(snakeImage4);
+        segments4.push_back(player4);
+    }
+    else if(i==5){
+        RenderObject *player5=new RenderObject(this);
+        player5->setXCoord(x);
+        player5->setYCoord(y);
+        player5->setImage(snakeImage5);
+        segments5.push_back(player5);
+    }
+    else if(i==6){
+        RenderObject *player6=new RenderObject(this);
+        player6->setXCoord(x);
+        player6->setYCoord(y);
+        player6->setImage(snakeImage6);
+        segments6.push_back(player6);
+    }
+    else if(i==7){
+        RenderObject *player7=new RenderObject(this);
+        player7->setXCoord(x);
+        player7->setYCoord(y);
+        player7->setImage(snakeImage7);
+        segments7.push_back(player7);
+    }
+    else if(i==8){
+        RenderObject *player8=new RenderObject(this);
+        player8->setXCoord(x);
+        player8->setYCoord(y);
+        player8->setImage(snakeImage8);
+        segments8.push_back(player8);
+    }
 }
 
 void Network2Player::resetObjects()
 {
     segments1.clear();
     segments2.clear();
+    segments3.clear();
+    segments4.clear();
+    segments5.clear();
+    segments6.clear();
+    segments7.clear();
+    segments8.clear();
 }
 
 void Network2Player::setPlayer(int player)

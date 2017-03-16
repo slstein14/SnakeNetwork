@@ -380,7 +380,6 @@ void HostGame::moveSnake()
             (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord()+1);
         }
 
-        snakes.at(i)=moveSnake;
         //Checks if the snake has hit an apple
         if(2==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]){
             //Flag causes a new apple to appear next tick
@@ -394,6 +393,8 @@ void HostGame::moveSnake()
             //Increases the player score
             score.at(i)++;
         }
+
+        snakes.at(i)=moveSnake;
 
         //Checks if the player has collided with a wall
         if((3==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])||(1==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()])){

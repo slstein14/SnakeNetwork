@@ -207,6 +207,24 @@ void JoinGame::readyRead()
             else if(pieces.value(i)=="SNAKE2"){
                 onPart=2;
             }
+            else if(pieces.value(i)=="SNAKE3"){
+                onPart=3;
+            }
+            else if(pieces.value(i)=="SNAKE4"){
+                onPart=4;
+            }
+            else if(pieces.value(i)=="SNAKE5"){
+                onPart=5;
+            }
+            else if(pieces.value(i)=="SNAKE6"){
+                onPart=6;
+            }
+            else if(pieces.value(i)=="SNAKE7"){
+                onPart=7;
+            }
+            else if(pieces.value(i)=="SNAKE8"){
+                onPart=8;
+            }
             else{
                 if((0!=pieces.value(i).toInt())&&(0!=pieces.value(i+1).toInt())){
                     game2->setPart(onPart,pieces.value(i).toInt(),pieces.value(i+1).toInt());
