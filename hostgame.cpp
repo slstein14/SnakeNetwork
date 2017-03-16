@@ -369,6 +369,7 @@ void HostGame::moveSnake()
             (*(moveSnake.at(0))).setYCoord((*(moveSnake.at(1))).getYCoord()+1);
         }
 
+        snakes.at(i)=moveSnake;
         //Checks if the snake has hit an apple
         if(2==matrix[(*(moveSnake.at(0))).getYCoord()][(*(moveSnake.at(0))).getXCoord()]){
             //Flag causes a new apple to appear next tick
