@@ -69,7 +69,7 @@ GameWindow::GameWindow(QWidget *parent) :
     for(int i=4;i>1;i--){
         player = new RenderObject(this);
         player->setXCoord(i);
-        player->setYCoord(1);
+        player->setYCoord(2);
         player->setImage(snakeImage);
         segments.push_back(player);
     }

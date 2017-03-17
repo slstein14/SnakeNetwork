@@ -72,15 +72,15 @@ GameWindow2Player::GameWindow2Player(QWidget *parent) :
     for(int i=4;i>1;i--){
         player1 = new RenderObject(this);
         player1->setXCoord(i);
-        player1->setYCoord(1);
+        player1->setYCoord(2);
         player1->setImage(snakeImage1);
         segments1.push_back(player1);
     }
 
-    for(int i=60;i<63;i++){
+    for(int i=59;i<62;i++){
         player2 = new RenderObject(this);
         player2->setXCoord(i);
-        player2->setYCoord(46);
+        player2->setYCoord(45);
         player2->setImage(snakeImage2);
         segments2.push_back(player2);
     }

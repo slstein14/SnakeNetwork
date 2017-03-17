@@ -37,9 +37,9 @@
     </widget>
     <addaction name="menuNew_Game"/>
     <addaction name="actionHigh_Score"/>
-    <addaction name="actionQuit"/>
     <addaction name="action2_Player"/>
     <addaction name="action2_Player_Join"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -54,7 +54,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionHigh_Score">
    <property name="text">
-    <string>High Score</string>
+    <string>High Scores</string>
    </property>
   </action>
   <action name="actionQuit">
