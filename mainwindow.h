@@ -7,7 +7,6 @@
 #include "contactus.h"
 #include "controls.h"
 #include "gamewindow2player.h"
-#include "hostgame.h"
 #include "joingame.h"
 
 namespace Ui {
@@ -39,8 +38,6 @@ private slots:
 
     void on_action2_Player_triggered();
 
-    void on_action2_Player_Host_triggered();
-
     void on_action2_Player_Join_triggered();
 
 private:
@@ -52,7 +49,6 @@ private:
     Controls* controls;
     GameWindow2Player* game2;
     JoinGame* join;
-    HostGame* host;
 };
 
 #endif // MAINWINDOW_H

@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
     hScore = NULL;
     contact = NULL;
     controls = NULL;
-    host=NULL;
     join=NULL;
 }
 
@@ -42,7 +41,6 @@ MainWindow::~MainWindow()
     delete controls;
     delete game;
     delete game2;
-    delete host;
     delete game;
 }
 
@@ -162,14 +160,6 @@ void MainWindow::on_action2_Player_triggered()
         game2 = new GameWindow2Player();
     }
     game2->show();
-}
-
-void MainWindow::on_action2_Player_Host_triggered()
-{
-    if(host==NULL){
-        host = new HostGame();
-    }
-    host->show();
 }
 
 void MainWindow::on_action2_Player_Join_triggered()

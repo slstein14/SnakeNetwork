@@ -21,7 +21,6 @@ SOURCES += main.cpp\
     renderobject.cpp \
     gamewindow2player.cpp \
     joingame.cpp \
-    hostgame.cpp \
     network2player.cpp
 
 HEADERS  += mainwindow.h \
@@ -32,12 +31,10 @@ HEADERS  += mainwindow.h \
     renderobject.h \
     gamewindow2player.h \
     joingame.h \
-    hostgame.h \
     network2player.h
 
 FORMS    += mainwindow.ui \
     highscores.ui \
     contactus.ui \
     controls.ui \
-    joingame.ui \
-    hostgame.ui
+    joingame.ui

@@ -39,7 +39,6 @@
     <addaction name="actionHigh_Score"/>
     <addaction name="actionQuit"/>
     <addaction name="action2_Player"/>
-    <addaction name="action2_Player_Host"/>
     <addaction name="action2_Player_Join"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -105,7 +104,7 @@
   </action>
   <action name="action2_Player_Join">
    <property name="text">
-    <string>2 Player Join</string>
+    <string>Multiplayer Network</string>
    </property>
   </action>
  </widget>
