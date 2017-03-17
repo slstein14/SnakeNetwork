@@ -35,15 +35,15 @@ void JoinGame::on_pushButton_clicked()
 {
     hostIP=ui->HostIP->toPlainText();
     nickname=ui->PlayerName->toPlainText();
-    qDebug() << "Player nickname: " << nickname;
-    qDebug() << "IP the player is trying to connect to: " << hostIP;
+    //qDebug() << "Player nickname: " << nickname;
+    //qDebug() << "IP the player is trying to connect to: " << hostIP;
 
     QByteArray sendData;
         sendData.append(nickname);
         //socket = new QTcpSocket(this);
         socket->connectToHost(hostIP, 5300);
         socket->waitForConnected(1000);
-        qDebug() << socket->state();
+        //qDebug() << socket->state();
         if(socket->state() == QAbstractSocket::ConnectedState)
         {
             socket->write(sendData); //write the data itself
@@ -63,7 +63,7 @@ void JoinGame::on_pushButton_clicked()
 void JoinGame::newConnection()
 {
     while (socket->isOpen()){
-        qDebug()<<"Has pending connections";
+        //qDebug()<<"Has pending connections";
         connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
         connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
     }
@@ -88,10 +88,10 @@ void JoinGame::Disconnected()
 
 void JoinGame::readyRead()
 {
-    qDebug()<<"readyRead";
+    //qDebug()<<"readyRead";
     QString data;
     data = socket->readAll();
-    qDebug()<<data;
+    //qDebug()<<data;
     QString command = data.split(";").first();
     if(command=="CONNECTED"){
         if(data.split(";").last()=="PLAYER1"){
@@ -158,7 +158,7 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="STARTED"){
-        qDebug()<<"New Game";
+        //qDebug()<<"New Game";
         if(game2 == NULL){
             game2 = new Network2Player();
         }
@@ -167,15 +167,15 @@ void JoinGame::readyRead()
             game2 = new Network2Player();
         }
         game2->show();
-        qDebug()<<data;
+        //qDebug()<<data;
         int pnum=data.split(";").last().toInt();
         game2->setPlayer(pnum);
-        qDebug()<<"Send READY";
+        //qDebug()<<"Send READY";
         QByteArray readyData;
         QString dir=QString::number(game2->getDirection());
         readyData.append("READY;");
         readyData.append(dir);
-        qDebug() << socket->state();
+        //qDebug() << socket->state();
         if(socket->state() == QAbstractSocket::ConnectedState)
         {
             socket->write(readyData); //write the data itself
@@ -187,7 +187,7 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="UPDATE"){
-        qDebug()<<"Recieved UPDATE";
+        //qDebug()<<"Recieved UPDATE";
         QStringList pieces = data.split( ";" );
         int onPart=0;
         game2->resetObjects();
@@ -226,12 +226,12 @@ void JoinGame::readyRead()
                 i++;
             }
         }
-        qDebug()<<"Send UPDATE";
+        //qDebug()<<"Send UPDATE";
         QString dir=QString::number(game2->getDirection());
         QByteArray updateData;
         updateData.append("UPDATE;");
         updateData.append(dir);
-        qDebug() << socket->state();
+        //qDebug() << socket->state();
         if(socket->state() == QAbstractSocket::ConnectedState)
         {
             socket->write(updateData); //write the data itself
@@ -243,7 +243,7 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="END"){
-        qDebug()<<"End";
+        //qDebug()<<"End";
         if(data.split(";").last()=="NOWINNER"){
             game2->gameOver(0);
         }
@@ -257,10 +257,10 @@ void JoinGame::readyRead()
 
 void JoinGame::on_StartButton_clicked()
 {
-    qDebug()<<"Send STARTGAME";
+    //qDebug()<<"Send STARTGAME";
     QByteArray startData;
     startData.append("STARTGAME");
-    qDebug() << socket->state();
+    //qDebug() << socket->state();
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
         socket->write(startData); //write the data itself
