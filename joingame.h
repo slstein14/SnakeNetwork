@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QTcpSocket>
-#include <QTcpServer>
 #include "renderobject.h"
 #include <QPixmap>
 #include <QTimer>
@@ -43,9 +42,7 @@ public:
     vector<RenderObject*>segments1;
     vector<RenderObject*>segments2;
     int direction1;
-   // bool newDirection1;
     int direction2;
-   // bool newDirection2;
     QMessageBox *msg;
     QMessageBox *pbox;
     QPixmap *snakeImage1;
@@ -55,7 +52,6 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-    void newConnection();
     void Disconnected();
     void readyRead();
 
@@ -64,7 +60,6 @@ private slots:
 private:
     Ui::JoinGame *ui;
     QTcpSocket *socket;
-    QTcpServer *server;
     Network2Player* game2;
     void updateField();
 };

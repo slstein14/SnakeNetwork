@@ -58,7 +58,7 @@ Network2Player::Network2Player(QWidget *parent) :
         }
     }
 
-    //initialize snake
+    //initialize snakes with image files
     player1 = new RenderObject(this);
     player1->setImage(snakeImage1);
 
@@ -98,22 +98,22 @@ void Network2Player::paintEvent(QPaintEvent *e)
     for(int i=0;i<segments2.size();i++){//Renders each segment of the snake 2
         (*(segments2.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments3.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments3.size();i++){//Renders each segment of the snake 3
         (*(segments3.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments4.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments4.size();i++){//Renders each segment of the snake 4
         (*(segments4.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments5.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments5.size();i++){//Renders each segment of the snake 5
         (*(segments5.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments6.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments6.size();i++){//Renders each segment of the snake 6
         (*(segments6.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments7.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments7.size();i++){//Renders each segment of the snake 7
         (*(segments7.at(i))).drawObject(painter);
     }
-    for(int i=0;i<segments8.size();i++){//Renders each segment of the snake 2
+    for(int i=0;i<segments8.size();i++){//Renders each segment of the snake 8
         (*(segments8.at(i))).drawObject(painter);
     }
 
@@ -154,7 +154,7 @@ void Network2Player::keyPressEvent(QKeyEvent *evt)
 
 void Network2Player::gameOver(int winner)
 {    if(winner==0){
-        //Displays Game Over Message
+        //Displays Game Over Message if all players eliminated
         QMessageBox mbox;
         mbox.setText("Game Over. Both Players Lost!");
         mbox.exec();
@@ -164,7 +164,7 @@ void Network2Player::gameOver(int winner)
         this->close();
     }
     else{
-        //Displays Game Over Message
+        //Displays Game Over Message and says who won
         QMessageBox mbox;
         QString message="Game Over. Player "+QString::number(winner)+" Wins!";
         mbox.setText(message);
@@ -179,10 +179,10 @@ void Network2Player::gameOver(int winner)
 int Network2Player::getDirection()
 {
     return this->direction;
-}
+}//Accessor
 
 void Network2Player::setPart(int i, int x, int y)
-{
+{//Sets the new coordinates of each rendered object
     if(i==0){
         apple->setXCoord(x);
         apple->setYCoord(y);
@@ -246,7 +246,7 @@ void Network2Player::setPart(int i, int x, int y)
 }
 
 void Network2Player::resetObjects()
-{
+{//Clears all the rendered object vectors so they can be set to new values
     segments1.clear();
     segments2.clear();
     segments3.clear();
@@ -258,7 +258,7 @@ void Network2Player::resetObjects()
 }
 
 void Network2Player::setPlayer(int player)
-{
+{//Sets the initial direction based on player number
     if((player%2)==1){
         direction=2;
         qDebug()<<"Player "<<player;
@@ -273,6 +273,6 @@ void Network2Player::setPlayer(int player)
 }
 
 void Network2Player::updateField()
-{
+{//Updates the rendered images 10x per second
     this->update();
 }

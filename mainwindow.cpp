@@ -135,7 +135,7 @@ void MainWindow::on_actionHard_triggered()
 }
 
 void MainWindow::on_actionControls_triggered()
-{
+{//Displays Controls Window
     if(controls==NULL){
         controls = new Controls();
     }
@@ -143,7 +143,7 @@ void MainWindow::on_actionControls_triggered()
 }
 
 void MainWindow::on_actionContact_Us_triggered()
-{
+{//Displays Contact Window
     if(contact==NULL){
         contact = new ContactUs();
     }
@@ -151,7 +151,7 @@ void MainWindow::on_actionContact_Us_triggered()
 }
 
 void MainWindow::on_action2_Player_triggered()
-{
+{//Starts 2 Player Local Game
     if(game2 == NULL){
         game2 = new GameWindow2Player();
     }
@@ -163,7 +163,7 @@ void MainWindow::on_action2_Player_triggered()
 }
 
 void MainWindow::on_action2_Player_Join_triggered()
-{
+{//Displays Join Dialogue for Network Multiplayer
     if(join==NULL){
         join = new JoinGame();
     }

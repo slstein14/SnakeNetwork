@@ -9,11 +9,11 @@ JoinGame::JoinGame(QWidget *parent) :
     ui->setupUi(this);
     game2=NULL;
 
-    server = new QTcpServer(this);
-    server->listen(QHostAddress::Any, 5300);
+    //Creates Socket Object
+    //Socket sends and recieves data
     socket = new QTcpSocket(this);
-    connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
+    //Only Player 1 can start the game
     ui->StartButton->setDisabled(true);
 }
 
@@ -21,23 +21,25 @@ JoinGame::~JoinGame()
 {
     delete game2;
     delete ui;
-}
+}//Prevents memory leaks
 
-void JoinGame::setHostIP(QString address){ hostIP = address; }
+void JoinGame::setHostIP(QString address){ hostIP = address; }//Not currently doing anything
 
 void JoinGame::closeEvent(QCloseEvent *e)
 {
     socket->disconnectFromHost();
     e->accept();
-}
+}//'X' button Disconnects from server before closing the window
 
 void JoinGame::on_pushButton_clicked()
 {
+    //Retrieves the host ip and player name from the message boxes
     hostIP=ui->HostIP->toPlainText();
     nickname=ui->PlayerName->toPlainText();
     //qDebug() << "Player nickname: " << nickname;
     //qDebug() << "IP the player is trying to connect to: " << hostIP;
 
+    //Initiates a connection to to the host IP and sends the nickname
     QByteArray sendData;
         sendData.append(nickname);
         //socket = new QTcpSocket(this);
@@ -53,24 +55,15 @@ void JoinGame::on_pushButton_clicked()
         {
             qDebug() << socket->errorString();
         }
-            //qDebug()<<"Has pending connections";
-            connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
-            connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
-            //qDebug()<<"Has wra pending connections";
 
-}
-
-void JoinGame::newConnection()
-{
-    while (socket->isOpen()){
-        //qDebug()<<"Has pending connections";
+        //Connects the socket to slots for reading back data and reseting variables
         connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
         connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
-    }
+
 }
 
 void JoinGame::Disconnected()
-{
+{//Resets the UI on disconnect
     ui->StartButton->setDisabled(true);
     ui->SnakeColor->setText("Your Snake Will Be: ");
     ui->SnakeColor->setStyleSheet("QLabel { color : Black; }");
@@ -83,17 +76,21 @@ void JoinGame::Disconnected()
     ui->P7Name->setText("");
     ui->P8Name->setText("");
     qDebug() << "Disconnected";
-
 }
 
 void JoinGame::readyRead()
-{
-    //qDebug()<<"readyRead";
+{//Triggered anytime the server sends data
+    //Reads Socket Data sent by the server
     QString data;
     data = socket->readAll();
     //qDebug()<<data;
+
+    //Splits the data based on ';'
     QString command = data.split(";").first();
+
     if(command=="CONNECTED"){
+        //If the server is indicating a successful connection
+        //Tells the Player what color their snake will be
         if(data.split(";").last()=="PLAYER1"){
             ui->SnakeColor->setText("Your Snake Will Be: Yellow");
             ui->SnakeColor->setStyleSheet("QLabel { color : Yellow; }");
@@ -129,6 +126,8 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="PLAYERLIST"){
+        //If the server is sending an updated list of players
+        //Sets the ui to display all connected players
         QStringList pieces = data.split( ";" );
         for(int i=0;i<pieces.length();i++){
             if(i==1){
@@ -158,6 +157,8 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="STARTED"){
+        //If the server is starting a game
+        //Creates the game object
         //qDebug()<<"New Game";
         if(game2 == NULL){
             game2 = new Network2Player();
@@ -167,9 +168,12 @@ void JoinGame::readyRead()
             game2 = new Network2Player();
         }
         game2->show();
-        //qDebug()<<data;
+
+        //Reads what player is assigned to that client and sets the starting movement direction
         int pnum=data.split(";").last().toInt();
         game2->setPlayer(pnum);
+
+        //Tells the server this client is ready
         //qDebug()<<"Send READY";
         QByteArray readyData;
         QString dir=QString::number(game2->getDirection());
@@ -187,11 +191,15 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="UPDATE"){
+        //If the server is updating the game (10x per second at least)
         //qDebug()<<"Recieved UPDATE";
+        //Resets objects so they dont render in the old locations
+        game2->resetObjects();
+
         QStringList pieces = data.split( ";" );
         int onPart=0;
-        game2->resetObjects();
         for(int i=0;i<pieces.length();i++){
+            //Sets which object is being updated
             if(pieces.value(i)=="APPLE"){
                 onPart=0;
             }
@@ -220,6 +228,7 @@ void JoinGame::readyRead()
                 onPart=8;
             }
             else{
+                //Sets the coordinate values for whichever object is being updated
                 if((0!=pieces.value(i).toInt())&&(0!=pieces.value(i+1).toInt())){
                     game2->setPart(onPart,pieces.value(i).toInt(),pieces.value(i+1).toInt());
                 }
@@ -227,6 +236,7 @@ void JoinGame::readyRead()
             }
         }
         //qDebug()<<"Send UPDATE";
+        //Sends back its current direction to update the server
         QString dir=QString::number(game2->getDirection());
         QByteArray updateData;
         updateData.append("UPDATE;");
@@ -243,6 +253,8 @@ void JoinGame::readyRead()
         }
     }
     else if(command=="END"){
+        //If the server is indicating the game has ended
+        //Displays who won to the player and disconnects from the server
         //qDebug()<<"End";
         if(data.split(";").last()=="NOWINNER"){
             game2->gameOver(0);
@@ -257,6 +269,8 @@ void JoinGame::readyRead()
 
 void JoinGame::on_StartButton_clicked()
 {
+    //Only available to player 1
+    //Tells the server to start the gmae
     //qDebug()<<"Send STARTGAME";
     QByteArray startData;
     startData.append("STARTGAME");
